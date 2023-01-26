@@ -9,7 +9,7 @@ async function generateAndDisplayQr() {
         return;
     qrdisplay.innerHTML = ``;
     const { svg, width, height } = await window.qrapi.qrcodesvg(qrdata.value);
-    console.log(`qrcodesvg returned ${width} & ${height}`);
+    // console.log(`qrcodesvg returned ${width} & ${height}`);
     qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
     qrdisplay.innerHTML = svg;
     // setDownloadButtonBlob();
