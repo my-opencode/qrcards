@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target":"ES2021",
+    "module": "Node16",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "lib":["DOM"]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
