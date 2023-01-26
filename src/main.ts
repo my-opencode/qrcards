@@ -6,7 +6,7 @@ import {qrobjToSvg} from "./qrobjToSvg";
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
-        height: 600,
+        height: 550,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
@@ -27,6 +27,7 @@ const createWindow = () => {
             width
         };
     });
+    win.loadFile(path.resolve(__dirname, '../html/index.html'))
 }
 
 app.whenReady().then(() => {
