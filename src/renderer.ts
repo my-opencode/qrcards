@@ -79,11 +79,76 @@ async function downloadQr() {
     await setDownloadButtonBlob();
     qrlink.click();
 }
+function getVcardFormData(): {
+    timezone?: string;
+    bday?: string;
+    email?: string;
+    phonework?: string;
+    phonemobile?: string;
+    phonemobilepersonal?: string;
+    websitework?: string;
+    company?: string;
+    surname: string;
+    names: string;
+    prefix?: string;
+    suffix?: string;
+    fullname: string;
+    addressdetails?: string;
+    addresslocalitycity?: string;
+    addressregion?: string;
+    addresszip?: string;
+    addresscountry?: string;
+    title?: string;
+} {
+    console.log(`get vcard values`);
+    const getVcInputValue = (vn: string) => getInputValue(`vc-${vn}`);
+    const surname = getVcInputValue(`surname`);
+    const names = getVcInputValue(`names`);
+    const fullname = getVcInputValue(`fullname`);
+    const addressdetails = getVcInputValue(`addressdetails`);
+    if (!surname || !names || !fullname /* || !addressdetails */) {
+        userMessage(`Form incomplete: Missing ${[
+            !surname ? `surname` : ``,
+            !names ? ` names` : ``,
+            !fullname ? ` full name` : ``,
+            !addressdetails ? `surname` : ``
+        ].filter(a => a).join(`, `)
+            } `);
+        throw new TypeError(`Vcard Form Incomplete`);
+    }
+    return {
+        timezone: getVcInputValue(`timezone`),
+        bday: getVcInputValue(`bday`),
+        email: getVcInputValue(`email`),
+        phonework: getVcInputValue(`phonework`),
+        phonemobile: getVcInputValue(`phonemobile`),
+        phonemobilepersonal: getVcInputValue(`phonemobilepersonal`),
+        websitework: getVcInputValue(`websitework`),
+        company: getVcInputValue(`company`),
+        surname,
+        names,
+        prefix: getVcInputValue(`prefix`),
+        suffix: getVcInputValue(`suffix`),
+        fullname,
+        addressdetails,
+        addresslocalitycity: getVcInputValue(`addresslocalitycity`),
+        addressregion: getVcInputValue(`addressregion`),
+        addresszip: getVcInputValue(`addresszip`),
+        addresscountry: getVcInputValue(`addresscountry`),
+        title: getVcInputValue(`title`)
+
+    }
+}
 function addPageEventListeners(pageName: string) {
     try {
         const { qrgenbtn, qrdldbtn, vcardqrgenbtn } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
+        } else if (pageName === `vcard`) {
+            vcardqrgenbtn.addEventListener(`click`, async function () {
+                const vcard = await window.vcardapi.vcard(getVcardFormData());
+                generateAndDisplayQr(vcard);
+            });
         }
         qrdldbtn.addEventListener(`click`, downloadQr);
     } catch (err) {
