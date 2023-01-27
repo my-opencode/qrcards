@@ -75,6 +75,7 @@
 <body>
   <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
   <button class="nav-link" data-page="vcard">Vcard Qr Code</button>
+  <button class="nav-link" data-page="vcards">Batch Qr Vcards</button>
   <div id="contents">
     Select an action to do.
   </div>
@@ -209,6 +210,107 @@
         <button name="qrdldbtn" id="qrdldbtn" disabled>Download Qr Code</button>
         <a name="qrdldlink" id="qrdldlink" href="#" class="no-display"></a>
       </div>
+    </div>
+  </template>
+
+  <template id="template-vcards">
+    <div class="centered-container">
+      <h1 class="txt-center">Batch Qr Vcards</h1>
+
+      <details>
+        <summary>Company Contact</summary>
+        <table>
+          <tr>
+            <td><label for="company">Company Name:</label></td>
+            <td><input type="text" name="company" id="vc-company" /></td>
+
+            <td><label for="phonework">Work Phone:</label></td>
+            <td><input type="text" name="phonework" id="vc-phonework" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="addressdetails">Address detail:</label></td>
+            <td><input type="text" name="addressdetails" id="vc-addressdetails" /></td>
+
+            <td><label for="phonemobile">Work Mobile:</label></td>
+            <td><input type="text" name="phonemobile" id="vc-phonemobile" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="addresslocalitycity">Locality, City:</label></td>
+            <td><input type="text" name="addresslocalitycity" id="vc-addresslocalitycity" /></td>
+
+            <td><label for="websitework">Company website:</label></td>
+            <td><input type="text" name="websitework" id="vc-websitework" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="addressregion">Region:</label></td>
+            <td><input type="text" name="addressregion" id="vc-addressregion" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="addresszip">Postal Code:</label></td>
+            <td><input type="text" name="addresszip" id="vc-addresszip" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="addresscountry">Country:</label></td>
+            <td><input type="text" name="addresscountry" id="vc-addresscountry" /></td>
+          </tr>
+
+          <tr>
+            <td><label for="timezone">Time Zone:</label></td>
+            <td><input type="text" name="timezone" id="vc-timezone" /></td>
+          </tr>
+        </table>
+      </details>
+
+      <details>
+        <summary>Employees</summary>
+        <svg xmlns="http://www.w3.org/2000/svg" id="qrdisplaycontainer" height="200" width="200">
+          <defs>
+            <rect id="dot" width="10" height="10" fill="black"></rect>
+          </defs>
+          <g id="qrdisplay"></g>
+        </svg>
+        <button id="vcards-add-data-row-btn">Add row</button>
+        <table id="vcards-employee-data">
+          <thead>
+            <td><input type="checkbox" name="vcardsall" id="vcardsall"> Select</td>
+            <td>Prefix:</td>
+            <td>Surname 性:</td>
+            <td>Names 名:</td>
+            <td>Suffix:</td>
+            <td>Fullname:</td>
+            <td>Title:</td>
+            <td>Birth Date:</td>
+            <td>E-Mail:</td>
+            <td>Work Phone:</td>
+            <td>Work Mobile:</td>
+            <td>Personal Mobile:</td>
+            <td>Actions</td>
+          </thead>
+
+          <!-- <tr>
+            <td><input type="text" name="prefix" id="vc-prefix" /></td>
+            <td><input type="text" name="surname" id="vc-surname" /></td>
+            <td><input type="text" name="names" id="vc-names" /></td>
+            <td><input type="text" name="suffix" id="vc-suffix" /></td>
+            <td><input type="text" name="fullname" id="vc-fullname" /></td>
+            <td><input type="text" name="title" id="vc-title" /></td>
+            <td><input type="text" name="bdate" id="vc-bdate" /></td>
+            <td><input type="text" name="email" id="vc-email" /></td>
+            <td><input type="text" name="phonework" id="vc-phonework" /></td>
+            <td><input type="text" name="phonemobile" id="vc-phonemobile" /></td>
+            <td><input type="text" name="phonemobilepersonal" id="vc-phonemobilepersonal" /></td>
+          </tr> -->
+
+        </table>
+      </details>
+
+      <button name="vcardsgenbtn" id="vcardsgenbtn">Generate Vcards</button>
+      <button name="vcardsdldbtn" id="vcardsdldbtn" disabled>Download Vcards</button>
     </div>
   </template>
 

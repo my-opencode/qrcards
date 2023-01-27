@@ -7,6 +7,10 @@ function getPointers() {
     const qrlink = document.querySelector('#contents #qrdldlink') as HTMLAnchorElement;
     const qrdisplay = document.querySelector(`#contents #qrdisplay`);
     const qrdata = document.querySelector(`#contents #qrdata`) as HTMLInputElement;
+    const vcardsTable = document.querySelector(`#contents #vcards-employee-data`);
+    const vcardsAddRowBtn = document.querySelector(`#contents #vcards-add-data-row-btn`);
+    const vcardsGenBtn = document.querySelector(`#contents #vcardsgenbtn`);
+    const vcardsDldBtn = document.querySelector(`#contents #vcardsdldbtn`);
     return {
         qrdata,
         qrdisplaycontainer,
@@ -14,7 +18,11 @@ function getPointers() {
         qrdldbtn,
         qrgenbtn,
         qrlink,
-        vcardqrgenbtn
+        vcardqrgenbtn,
+        vcardsAddRowBtn,
+        vcardsDldBtn,
+        vcardsGenBtn,
+        vcardsTable
     }
 }
 function getInputValue(id: string): string | undefined {
@@ -139,9 +147,57 @@ function getVcardFormData(): {
 
     }
 }
+
+function vcardsRmvDataRow(event: MouseEvent) {
+    if (event.target instanceof HTMLButtonElement) {
+        const rowi = event.target.dataset.row;
+        const row = document.querySelector(`#contents #vc-${rowi}`);
+        if (row) row.remove();
+    }
+}
+function vcardsAddDataRow() {
+    console.log(`add data row`);
+    const { vcardsTable } = getPointers();
+    if (!vcardsTable) return;
+    const rowi = Array.from(vcardsTable.getElementsByTagName(`tr`)).length + 1;
+    const fields = [
+        `prefix`, `surname`, `names`, `suffix`, `fullname`, `title`, `bdate`, `email`, `phonework`, `phonemobile`, `phonemobilepersonal`
+    ];
+
+    const row = document.createElement(`tr`);
+    row.setAttribute(`id`, `vc-${rowi}`)
+    {
+        const td = document.createElement(`td`);
+        const i = document.createElement(`input`);
+        i.setAttribute(`type`, `checkbox`);
+        i.setAttribute(`id`, `vc-${rowi}-select`)
+        td.appendChild(i);
+        row.appendChild(td);
+    }
+    for (const f of fields) {
+        const td = document.createElement(`td`);
+        const i = document.createElement(`input`);
+        i.setAttribute(`type`, `text`);
+        i.setAttribute(`id`, `vc-${rowi}-${f}`)
+        td.appendChild(i);
+        row.appendChild(td);
+    }
+    {
+        const td = document.createElement(`td`);
+        const b = document.createElement(`button`);
+        b.setAttribute(`class`, `delete-row-btn`);
+        b.setAttribute(`data-row`, `${rowi}`);
+        b.innerText = `X`;
+        b.addEventListener(`click`, vcardsRmvDataRow)
+        td.appendChild(b);
+        row.appendChild(td);
+    }
+    vcardsTable.appendChild(row);
+}
+
 function addPageEventListeners(pageName: string) {
     try {
-        const { qrgenbtn, qrdldbtn, vcardqrgenbtn } = getPointers();
+        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsAddRowBtn } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
         } else if (pageName === `vcard`) {
@@ -150,7 +206,11 @@ function addPageEventListeners(pageName: string) {
                 generateAndDisplayQr(vcard);
             });
         }
-        qrdldbtn.addEventListener(`click`, downloadQr);
+        if ([`plaintex`, `vcard`].includes(pageName))
+            qrdldbtn.addEventListener(`click`, downloadQr);
+        if(pageName === `vcards`) {
+            vcardsAddRowBtn.addEventListener(`click`, vcardsAddDataRow);
+        }
     } catch (err) {
         console.log(`Cannot add page listeners: ${err.message}`);
     }
