@@ -29,6 +29,6 @@ export function qrobjToSvg(qrcode: QRCode): { svg: string, height: number, width
         rowi++;
     }
     // return values
-    console.log({ svg, height, width });
+    // console.log({ svg, height, width });
     return { svg, height, width };
 }
