@@ -1,6 +1,6 @@
 {
   "name": "qrcards",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Electron App to create Qr Code based Vcards",
   "main": "dist/main.js",
   "scripts": {
