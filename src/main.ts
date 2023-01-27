@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import * as QRCode from "qrcode";
-import {qrobjToSvg} from "./qrobjToSvg";
+import { formToVcard, IVcardForm } from './formToVcard';
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -26,6 +26,11 @@ const createWindow = () => {
             height,
             width
         };
+    });
+    ipcMain.handle(`vcard`, function (event, formObj: IVcardForm) {
+        console.log(`build vcard`);
+        const vcard = formToVcard(formObj);
+        return vcard;
     });
     win.loadFile(path.resolve(__dirname, '../html/index.html'))
 }
