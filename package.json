@@ -1,12 +1,12 @@
 {
   "name": "qrcards",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Electron App to create Qr Code based Vcards",
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "electron-forge start",
+    "start": "npm run build && electron ./dist/main.js",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "importmake": "electron-forge import && npm run make"

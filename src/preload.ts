@@ -1,9 +1,13 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { QRCodeOptions } from "qrcode";
+import { IVcardForm } from "./formToVcard";
 
 contextBridge.exposeInMainWorld('qrapi', {
     qrcode: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcode', data, o),
     qrcodesvg: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcodesvg', data, o),
+});
+contextBridge.exposeInMainWorld('vcardapi', {
+    vcard: (formObj: IVcardForm) => ipcRenderer.invoke('vcard', formObj),
 });
 
 // window.addEventListener('DOMContentLoaded', () => {
