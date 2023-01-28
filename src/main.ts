@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import * as QRCode from "qrcode";
+import { qrobjToSvg } from "./qrobjToSvg";
 import { formToVcard, IVcardForm } from './formToVcard';
 
 const createWindow = () => {
@@ -12,12 +13,12 @@ const createWindow = () => {
         }
     })
 
-    ipcMain.handle(`qrcode`, function (event, data:string, o?:QRCode.QRCodeOptions) {
+    ipcMain.handle(`qrcode`, function (event, data: string, o?: QRCode.QRCodeOptions) {
         console.log(`create qr code for`, data);
         const qrobj = QRCode.create(data, o);
         return qrobj;
     });
-    ipcMain.handle(`qrcodesvg`, function (event, data, o:QRCode.QRCodeOptions) {
+    ipcMain.handle(`qrcodesvg`, function (event, data, o: QRCode.QRCodeOptions) {
         console.log(`create qr code for`, data);
         const qrobj = QRCode.create(data, o);
         const { svg, height, width } = qrobjToSvg(qrobj);
