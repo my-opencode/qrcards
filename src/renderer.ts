@@ -25,14 +25,7 @@ async function generateAndDisplayQr(data?: string) {
     console.log(`gen and display qr`);
     const { qrdata, qrdisplay, qrdisplaycontainer, qrdldbtn } = getPointers();
     if (!data && !qrdata?.value) {
-const qrdisplaycontainer = document.getElementById(`qrdisplaycontainer`) as unknown as SVGAElement;
-const qrgenbtn = document.getElementById('qrgenbtn');
-const qrdldbtn = document.getElementById('qrdldbtn');
-const qrlink = document.getElementById('qrdldlink') as HTMLAnchorElement;
-const qrdisplay = document.getElementById(`qrdisplay`);
-const qrdata = document.getElementById(`qrdata`) as HTMLInputElement;
-async function generateAndDisplayQr() {
-    if (!qrdata?.value)
+        userMessage(`No data for qr. Skipping generation.`)
         return;
     }
     qrdisplay.innerHTML = ``;
@@ -127,3 +120,12 @@ Array.prototype.forEach.call(document.getElementsByClassName(`nav-link`), (eleme
     });
 });
 
+function userMessage(text: string) {
+    const d = document.createElement(`div`);
+    d.classList.add(`user-message`);
+    const p = document.createElement(`p`);
+    p.innerText = text;
+    d.appendChild(p);
+    document.getElementsByTagName(`body`)[0].appendChild(d);
+    setTimeout(() => d.remove(), 5000);
+}
