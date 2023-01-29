@@ -11,6 +11,7 @@ function getPointers() {
     const vcardsAddRowBtn = document.querySelector(`#contents #vcards-add-data-row-btn`);
     const vcardsGenBtn = document.querySelector(`#contents #vcardsgenbtn`);
     const vcardsDldBtn = document.querySelector(`#contents #vcardsdldbtn`);
+    const vcardsSelectAll = document.querySelector(`#contents #vcardsall`) as HTMLInputElement;
     return {
         qrdata,
         qrdisplaycontainer,
@@ -22,6 +23,7 @@ function getPointers() {
         vcardsAddRowBtn,
         vcardsDldBtn,
         vcardsGenBtn,
+        vcardsSelectAll,
         vcardsTable
     }
 }
@@ -166,14 +168,17 @@ function vcardsAddDataRow() {
 
     const row = document.createElement(`tr`);
     row.setAttribute(`id`, `vc-${rowi}`)
+    // select
     {
         const td = document.createElement(`td`);
         const i = document.createElement(`input`);
         i.setAttribute(`type`, `checkbox`);
         i.setAttribute(`id`, `vc-${rowi}-select`)
+        i.classList.add(`data-row-selector`)
         td.appendChild(i);
         row.appendChild(td);
     }
+    // fields
     for (const f of fields) {
         const td = document.createElement(`td`);
         const i = document.createElement(`input`);
@@ -182,6 +187,7 @@ function vcardsAddDataRow() {
         td.appendChild(i);
         row.appendChild(td);
     }
+    // actions & hidden svg
     {
         const td = document.createElement(`td`);
         const b = document.createElement(`button`);
@@ -190,14 +196,37 @@ function vcardsAddDataRow() {
         b.innerText = `X`;
         b.addEventListener(`click`, vcardsRmvDataRow)
         td.appendChild(b);
+        const s = document.createElement(`svg`);
+        s.setAttribute(`class`, `no-display`)
+        s.setAttribute(`xmlns`, `http://www.w3.org/2000/svg`)
+        s.setAttribute(`id`, `qr-${rowi}`);
+        s.setAttribute(`height`, `2000`);
+        s.setAttribute(`width`, `2000`);
+        const sdef = document.createElement(`def`);
+        const sdefr = document.createElement(`rect`);
+        sdefr.setAttribute(`id`, `dot`);
+        sdefr.setAttribute(`height`, `10`);
+        sdefr.setAttribute(`width`, `10`);
+        sdefr.setAttribute(`fill`, `black`);
+        sdef.appendChild(sdefr);
+        s.appendChild(sdef);
+        const sqr = document.createElement(`g`);
+        sqr.setAttribute(`id`, `qrdisplay-${rowi}`);
+        s.appendChild(sqr);
+        td.appendChild(s);
         row.appendChild(td);
     }
     vcardsTable.appendChild(row);
 }
+function vcardsHandlerSelectDeselectAll(){
+    const {vcardsSelectAll} = getPointers();
+    Array.from(document.querySelectorAll(`#contents .data-row-selector`))
+        .forEach((cb:HTMLInputElement) => cb.checked = vcardsSelectAll.checked);
+}
 
 function addPageEventListeners(pageName: string) {
     try {
-        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsAddRowBtn } = getPointers();
+        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsAddRowBtn, vcardsSelectAll } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
         } else if (pageName === `vcard`) {
@@ -208,11 +237,17 @@ function addPageEventListeners(pageName: string) {
         }
         if ([`plaintex`, `vcard`].includes(pageName))
             qrdldbtn.addEventListener(`click`, downloadQr);
-        if(pageName === `vcards`) {
+        if (pageName === `vcards`) {
             vcardsAddRowBtn.addEventListener(`click`, vcardsAddDataRow);
+            vcardsSelectAll.addEventListener(`change`, vcardsHandlerSelectDeselectAll)
         }
     } catch (err) {
         console.log(`Cannot add page listeners: ${err.message}`);
+    }
+}
+function initPage(pageName: string) {
+    if (pageName === `vcards`) {
+        vcardsAddDataRow()
     }
 }
 
@@ -237,6 +272,7 @@ function changePage(pageName: string) {
     pageContentDiv.appendChild(clone);
 
     addPageEventListeners(pageName);
+    initPage(pageName);
 }
 
 Array.prototype.forEach.call(document.getElementsByClassName(`nav-link`), (element: HTMLElement) => {
