@@ -274,6 +274,7 @@ const vcardRequiredFields = [
     `surname`, `names`, `fullname`
 ];
 function getVcardsFormData(): IRowVcardForm[] {
+    console.log(`get vcards form data`);
     const data: IRowVcardForm[] = [];
     const companyData = vcardsCompanyFormFields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
         o[fn] = getInputValue(`vc-${fn}`);
@@ -301,6 +302,7 @@ function getVcardsFormData(): IRowVcardForm[] {
             } as unknown as IRowVcardForm;
             data.push(rowData);
         });
+    console.log(`got ${data.length} rows`)
     return data
 }
 async function generateAndStoreQr(rowi:string,data: string) {
@@ -318,6 +320,7 @@ async function generateAndStoreQr(rowi:string,data: string) {
     vcardsDldBtn.removeAttribute(`disabled`);
 }
 async function vcardsGenHandler() {
+    console.log(`vcards generate button clicked`);
     const formObjects = getVcardsFormData();
     for (const o of formObjects) {
         const vcard = await window.vcardapi.vcard(o);
@@ -330,11 +333,11 @@ function addPageEventListeners(pageName: string) {
         const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
+            qrdldbtn.addEventListener(`click`, downloadQr);
         } else if (pageName === `vcard`) {
             vcardqrgenbtn.addEventListener(`click`, vcardGenHandler);
-        }
-        if ([`plaintex`, `vcard`].includes(pageName))
             qrdldbtn.addEventListener(`click`, downloadQr);
+        }
         if (pageName === `vcards`) {
             vcardsAddRowBtn.addEventListener(`click`, vcardsAddDataRow);
             vcardsSelectAll.addEventListener(`change`, vcardsHandlerSelectDeselectAll);
