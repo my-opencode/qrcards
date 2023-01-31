@@ -3,6 +3,7 @@ import path from 'path';
 import * as QRCode from "qrcode";
 import { qrobjToSvg } from "./qrobjToSvg";
 import { formToVcard, IVcardForm } from './formToVcard';
+import { IImgFileDesc, zipImages, zipToBlob } from "./zipImages";
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -32,6 +33,11 @@ const createWindow = () => {
         console.log(`build vcard`);
         const vcard = formToVcard(formObj);
         return vcard;
+    });
+    ipcMain.handle(`zipimages`, async function (event, images: IImgFileDesc[]) {
+        console.log(`zip images`);
+        const zip = await zipToBlob(zipImages(images));
+        return zip;
     });
     win.loadFile(path.resolve(__dirname, '../html/index.html'))
 }
