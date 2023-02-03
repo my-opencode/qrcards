@@ -2,8 +2,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import * as QRCode from "qrcode";
 import { qrobjToSvg } from "./qrobjToSvg";
-import { formToVcard, IVcardForm } from './formToVcard';
-import { IImgFileDesc, zipImages, zipToBlob } from "./zipImages";
+import { IImgFileDesc, IVcardForm } from "./types";
+import { formToVcard } from './formToVcard';
+import { zipImages, zipToBlob } from "./zipImages";
 
 const createWindow = () => {
     const win = new BrowserWindow({

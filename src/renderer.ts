@@ -1,3 +1,5 @@
+import { IImgFileDesc } from "./types";
+
 const pageContentDiv = document.getElementById(`contents`);
 // Common
 function getPointers() {
@@ -187,7 +189,8 @@ function vcardsAddDataRow() {
     ];
 
     const row = document.createElement(`tr`);
-    row.setAttribute(`id`, `vc-${rowi}`)
+    row.setAttribute(`id`, `vc-${rowi}`);
+    row.setAttribute(`data-row`, `${rowi}`);
     // select
     {
         const td = document.createElement(`td`);
@@ -206,6 +209,9 @@ function vcardsAddDataRow() {
         i.setAttribute(`type`, `text`);
         i.setAttribute(`id`, `vc-${rowi}-${f}`)
         i.setAttribute(`size`, `10`)
+
+        i.setAttribute(`value`, `test ${f}`)
+
         td.appendChild(i);
         row.appendChild(td);
     }
@@ -218,21 +224,22 @@ function vcardsAddDataRow() {
         b.innerText = `X`;
         b.addEventListener(`click`, vcardsRmvDataRow)
         td.appendChild(b);
-        const s = document.createElement(`svg`);
-        s.setAttribute(`class`, `no-display`)
-        s.setAttribute(`xmlns`, `http://www.w3.org/2000/svg`)
+        const s = document.createElementNS('http://www.w3.org/2000/svg', `svg`);
+        s.classList.add(`no-display`)
+        s.setAttribute(`xmlns`, 'http://www.w3.org/2000/svg');
         s.setAttribute(`id`, `qr-${rowi}`);
         s.setAttribute(`height`, `2000`);
         s.setAttribute(`width`, `2000`);
-        const sdef = document.createElement(`def`);
-        const sdefr = document.createElement(`rect`);
+        s.setAttribute(`preserveAspectRatio`, "xMidYMid meet");
+        const sdef = document.createElementNS('http://www.w3.org/2000/svg', `def`);
+        const sdefr = document.createElementNS('http://www.w3.org/2000/svg', `rect`);
         sdefr.setAttribute(`id`, `dot`);
-        sdefr.setAttribute(`height`, `10`);
-        sdefr.setAttribute(`width`, `10`);
+        sdefr.setAttribute(`height`, `10.15`);
+        sdefr.setAttribute(`width`, `10.15`);
         sdefr.setAttribute(`fill`, `black`);
         sdef.appendChild(sdefr);
         s.appendChild(sdef);
-        const sqr = document.createElement(`g`);
+        const sqr = document.createElementNS('http://www.w3.org/2000/svg', `g`);
         sqr.setAttribute(`id`, `qrdisplay-${rowi}`);
         s.appendChild(sqr);
         td.appendChild(s);
@@ -305,7 +312,7 @@ function getVcardsFormData(): IRowVcardForm[] {
     console.log(`got ${data.length} rows`)
     return data
 }
-async function generateAndStoreQr(rowi:string,data: string) {
+async function generateAndStoreQr(rowi: string, data: string) {
     console.log(`gen and store qr`);
     const qrdisplaycontainer = document.querySelector(`#contents #qr-${rowi}`)
     const qrdisplay = document.querySelector(`#contents #qrdisplay-${rowi}`)
@@ -324,7 +331,9 @@ async function vcardsGenHandler() {
     const formObjects = getVcardsFormData();
     for (const o of formObjects) {
         const vcard = await window.vcardapi.vcard(o);
-        generateAndStoreQr(o.rowi,vcard);
+        generateAndStoreQr(o.rowi, vcard);
+    }
+}
     }
 }
 // navigation common

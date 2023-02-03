@@ -1,8 +1,6 @@
 import JSZip from "jszip";
-export interface IImgFileDesc {
-    filename: string;
-    data: string
-}
+import { IImgFileDesc } from "./types";
+
 export function zipImages(images: IImgFileDesc[]): JSZip {
     const zip = new JSZip();
     zip.file(`textfile.txt`, `hello`);
@@ -13,6 +11,6 @@ export function zipImages(images: IImgFileDesc[]): JSZip {
     return zip;
 }
 
-export async function zipToBlob(zip:JSZip):Promise<Blob> {
-    return await zip.generateAsync({type:`blob`});
+export async function zipToBlob(zip:JSZip):Promise<Buffer> {
+    return await zip.generateAsync({type:`nodebuffer`});
 }
