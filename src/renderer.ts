@@ -15,6 +15,7 @@ function getPointers() {
     const vcardsGenBtn = document.querySelector(`#contents #vcardsgenbtn`);
     const vcardsDldBtn = document.querySelector(`#contents #vcardsdldbtn`);
     const vcardsSelectAll = document.querySelector(`#contents #vcardsall`) as HTMLInputElement;
+    const ziplink = document.querySelector('#contents #zipdldlink') as HTMLAnchorElement;
     return {
         qrdata,
         qrdisplaycontainer,
@@ -27,7 +28,8 @@ function getPointers() {
         vcardsDldBtn,
         vcardsGenBtn,
         vcardsSelectAll,
-        vcardsTable
+        vcardsTable,
+        ziplink
     }
 }
 function getInputValue(id: string): string | undefined {
@@ -43,29 +45,12 @@ function userMessage(text: string) {
     document.getElementsByTagName(`body`)[0].appendChild(d);
     setTimeout(() => d.remove(), 5000);
 }
-// single qr common
-async function generateAndDisplayQr(data?: string) {
-    console.log(`gen and display qr`);
-    const { qrdata, qrdisplay, qrdisplaycontainer, qrdldbtn } = getPointers();
-    if (!data && !qrdata?.value) {
-        userMessage(`No data for qr. Skipping generation.`)
-        return;
-    }
-    qrdisplay.innerHTML = ``;
-    const { svg, width, height } = await window.qrapi.qrcodesvg(data || qrdata.value);
-    // console.log(`qrcodesvg returned ${width} & ${height}`);
-    qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
-    qrdisplay.innerHTML = svg;
-    // setDownloadButtonBlob();
-    qrdldbtn.removeAttribute(`disabled`);
-}
-function setDownloadButtonBlob() {
-    console.log(`set dl`);
-    const { qrdisplaycontainer, qrlink } = getPointers();
-    // <canvas id="myCanvas" width="300" height="300"></canvas>
-    // get svg blob
-    const { width, height } = qrdisplaycontainer.getBBox();
-    const clonedSvg = qrdisplaycontainer.cloneNode(true) as SVGAElement;
+function svgToPng(svg: SVGAElement): Promise<string> {
+    const clonedSvg = svg.cloneNode(true) as SVGSVGElement;
+    clonedSvg.removeAttribute('class');
+    let { width, height } = (clonedSvg as unknown as SVGSVGElement).getBBox();
+    if(!width) width = clonedSvg.getBoundingClientRect().width || 2000;
+    if(!height) height =  clonedSvg.getBoundingClientRect().height || 2000;
     const svgBlob = new Blob([clonedSvg.outerHTML], { type: 'image/svg+xml' });
     console.log(`svg blob ok`);
     // svg blob to canvas blob url
@@ -86,15 +71,42 @@ function setDownloadButtonBlob() {
             console.log(`canvas drawn`);
             // canvas data url as download link
             const pngDataUrl = canvas.toDataURL();
-            qrlink.download = `qrcode.png`;
-            qrlink.href = pngDataUrl;
-            console.log(`link set`);
             DOMURL.revokeObjectURL(svgBlobUrl);
-            r(1);
+            r(pngDataUrl);
         };
         // init image
         img.src = svgBlobUrl;
     });
+}
+function getBase64String(dataURL: string) {
+    const idx = dataURL.indexOf('base64,') + 'base64,'.length;
+    return dataURL.substring(idx);
+}
+// single qr common
+async function generateAndDisplayQr(data?: string) {
+    console.log(`gen and display qr`);
+    const { qrdata, qrdisplay, qrdisplaycontainer, qrdldbtn } = getPointers();
+    if (!data && !qrdata?.value) {
+        userMessage(`No data for qr. Skipping generation.`)
+        return;
+    }
+    qrdisplay.innerHTML = ``;
+    const { svg, width, height } = await window.qrapi.qrcodesvg(data || qrdata.value);
+    // console.log(`qrcodesvg returned ${width} & ${height}`);
+    qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
+    qrdisplay.innerHTML = svg;
+    // setDownloadButtonBlob();
+    qrdldbtn.removeAttribute(`disabled`);
+}
+async function setDownloadButtonBlob() {
+    console.log(`set dl`);
+    const { qrdisplaycontainer, qrlink } = getPointers();
+    // <canvas id="myCanvas" width="300" height="300"></canvas>
+    // get svg blob
+    const png = await svgToPng(qrdisplaycontainer);
+    qrlink.download = `qrcode.png`;
+    qrlink.href = png;
+    console.log(`link set`);
 }
 async function downloadQr() {
     console.log(`dowload clicked`);
@@ -334,12 +346,43 @@ async function vcardsGenHandler() {
         generateAndStoreQr(o.rowi, vcard);
     }
 }
+function getSelectedVcardsRows(): HTMLElement[] {
+    // list selected rows
+    const { vcardsSelectAll, vcardsTable } = getPointers();
+    let tableRows = Array.from(vcardsTable.getElementsByTagName(`tr`));
+    if (!vcardsSelectAll.checked) {
+        tableRows = tableRows.filter(tr => (tr.querySelector(`input[type=checkbox]`) as HTMLInputElement)?.checked);
     }
+    return tableRows;
+}
+async function getImageFromRow(row: HTMLElement): Promise<IImgFileDesc> {
+    const rowi = row.dataset.row;
+    const surname = encodeURI((row.children[2].firstChild as HTMLInputElement).value);
+    const filename = `${String(rowi).padStart(3, `0`)} - ${surname}.png`;
+    const svg = row.querySelector(`#qr-${rowi}`) as SVGAElement;
+    const dataUrl = await svgToPng(svg);
+    const data = getBase64String(dataUrl);
+    return { filename, data };
+}
+async function vcardsDownloadManyHandler() {
+    console.log(`download many qr clicked`);
+    const { ziplink } = getPointers();
+    const rows = getSelectedVcardsRows();
+    if (!rows.length) {
+        console.log(`No qr selected`);
+        userMessage(`No row selected.`);
+        return;
+    }
+    const imageDescs: IImgFileDesc[] = await Promise.all(rows.map(getImageFromRow));
+    const zip = await window.zipapi.zipimages(imageDescs);
+    ziplink.download = `qrcodes.zip`;
+    ziplink.href = URL.createObjectURL(new Blob([zip]));
+    ziplink.click();
 }
 // navigation common
 function addPageEventListeners(pageName: string) {
     try {
-        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll } = getPointers();
+        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll, vcardsDldBtn } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
             qrdldbtn.addEventListener(`click`, downloadQr);
@@ -351,6 +394,7 @@ function addPageEventListeners(pageName: string) {
             vcardsAddRowBtn.addEventListener(`click`, vcardsAddDataRow);
             vcardsSelectAll.addEventListener(`change`, vcardsHandlerSelectDeselectAll);
             vcardsGenBtn.addEventListener(`click`, vcardsGenHandler);
+            vcardsDldBtn.addEventListener(`click`, vcardsDownloadManyHandler);
         }
     } catch (err) {
         console.log(`Cannot add page listeners: ${err.message}`);
@@ -366,7 +410,7 @@ function initPage(pageName: string) {
 // }
 function changePage(pageName: string) {
     console.log(`changing page to ${pageName}`)
-    // const links = document.querySelectorAll(`link[rel = "import"][data-page= "${pageName}"]`) as NodeListOf<ImportHTMLLinkElement>;
+    // const links = document.querySelectorAll(`link[rel="import"][data-page="${pageName}"]`) as NodeListOf<ImportHTMLLinkElement>;
     // const link = links[0];
     // if (!link) return;
     // const template = link.import.querySelector('template');

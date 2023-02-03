@@ -1,4 +1,5 @@
 import { QRCodeOptions } from "qrcode";
+import { IVcardForm } from "./formToVcard";
 
 export interface IImgFileDesc {
     filename: string;
