@@ -15,7 +15,7 @@ export function qrobjToSvg(qrcode: QRCode): { svg: string, height: number, width
     const x = (coli: number) => marginSize + (coli * dotSize);
     const y = (rowi: number) => marginSize + (rowi * dotSize);
     // build svg html
-    let svg = `<rect x="0" y="0" width="${width}" height="${height}" fill="${bgColor}" />`;
+    let svg = `<rect x="0" y="0" width="${width}" height="${height}" fill="${bgColor}"></rect>`;
     let rowi = 0;
     while (data.length) {
         let coli = 0;
@@ -23,7 +23,7 @@ export function qrobjToSvg(qrcode: QRCode): { svg: string, height: number, width
         data = data.slice(w);
         for (const v of row) {
             if (v)
-                svg += `<use x="${x(coli)}" y="${y(rowi)}" href="#dot" />`;
+                svg += `<use x="${x(coli)}" y="${y(rowi)}" href="#dot"></use>`;
             coli++;
         }
         rowi++;
