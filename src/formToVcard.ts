@@ -1,24 +1,5 @@
-export interface IVcardForm {
-    timezone?: string;
-    bday?: string;
-    email?: string;
-    phonework?: string;
-    phonemobile?: string;
-    phonemobilepersonal?: string;
-    websitework?: string;
-    company?: string;
-    surname: string;
-    names: string;
-    prefix?: string;
-    suffix?: string;
-    fullname: string;
-    addressdetails?: string;
-    addresslocalitycity?: string;
-    addressregion?: string;
-    addresszip?: string;
-    addresscountry?: string;
-    title?: string;
-}
+import { IVcardForm } from "./types";
+
 export function formToVcard(formObj: IVcardForm): string {
     const vcard = `BEGIN:VCARD
 VERSION:4.0${formObj.timezone ? `\nTZ:${formObj.timezone}` : ``
