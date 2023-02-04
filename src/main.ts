@@ -79,6 +79,19 @@ const createWindow = () => {
         if (data.employee_form_fields) applicationData.employee_form_fields = data.employee_form_fields;
         if (data.vcard_required_fields) applicationData.vcard_required_fields = data.vcard_required_fields;
     });
+    ipcMain.handle(`saveappdata`,async function(){
+        console.log(`load data from file`);
+        const filePath = await dialog.showSaveDialog({
+            filters: [
+                { name: `Data JSON`, extensions: [`json`] },
+            ]
+        });
+        if (filePath.canceled) {
+            console.log(`Save data: Cancelled by user.`);
+            return;
+        }
+        await fs.writeFile(filePath.filePath, JSON.stringify(applicationData,null,` `), {encoding:`utf-8`});
+    });
     win.loadFile(path.resolve(__dirname, '../html/index.html'))
 }
 

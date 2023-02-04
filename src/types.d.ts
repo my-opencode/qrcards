@@ -59,6 +59,7 @@ declare global {
             loaddata(): Promise<void>;
             getappdata(): Promise<IApplicationData>;
             setappdata(data:IApplicationDataUpdate): Promise<void>;
+            saveappdata(): Promise<void>;
         };
     }
 }

@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('dataapi', {
     loaddata: () => ipcRenderer.invoke('loaddata'),
     getappdata: () => ipcRenderer.invoke('getappdata'),
     setappdata: (data: IApplicationDataUpdate) => ipcRenderer.invoke('setappdata', data),
+    saveappdata: () => ipcRenderer.invoke(`saveappdata`),
 });
 
 // window.addEventListener('DOMContentLoaded', () => {

@@ -17,6 +17,7 @@ function getPointers() {
     const vcardsDldBtn = document.querySelector(`#contents #vcardsdldbtn`);
     const vcardsSelectAll = document.querySelector(`#contents #vcardsall`) as HTMLInputElement;
     const vcardsdataloadbtn = document.querySelector(`#contents #vcardsdataloadbtn`);
+    const vcardsdatadownloadbtn = document.querySelector(`#contents #vcardsdatadownloadbtn`);
     const ziplink = document.querySelector('#contents #zipdldlink') as HTMLAnchorElement;
     return {
         qrdata,
@@ -32,6 +33,7 @@ function getPointers() {
         vcardsSelectAll,
         vcardsTable,
         vcardsdataloadbtn,
+        vcardsdatadownloadbtn,
         ziplink
     }
 }
@@ -39,7 +41,7 @@ function getInputValue(id: string): string | undefined {
     const i = document.querySelector(`#contents #${id}`) as HTMLInputElement;
     return i?.value;
 }
-function setInputValue(id: string, value:string) {
+function setInputValue(id: string, value: string) {
     const i = document.querySelector(`#contents #${id}`) as HTMLInputElement;
     i.value = value;
 }
@@ -122,7 +124,8 @@ async function downloadQr() {
     qrlink.click();
 }
 // vcard
-interface IVcardForm {
+interface baseObj { [key: string]: string }
+interface IVcardForm extends baseObj {
     timezone?: string;
     bday?: string;
     email?: string;
@@ -198,9 +201,9 @@ function vcardsRmvDataRow(event: MouseEvent) {
         if (row) row.remove();
     }
 }
-async function vcardsAddDataRow(event?:MouseEvent,employeeData?:{[key:string]:string}) {
+async function vcardsAddDataRow(event?: MouseEvent, employeeData?: { [key: string]: string }) {
     console.log(`add data row`);
-    const {employee_form_fields} = await window.dataapi.getappdata();
+    const { employee_form_fields } = await window.dataapi.getappdata();
     const { vcardsTable } = getPointers();
     if (!vcardsTable) return;
     const rowi = Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector)).length;
@@ -269,15 +272,15 @@ function vcardsHandlerSelectDeselectAll() {
     Array.from(document.querySelectorAll(`#contents .data-row-selector`))
         .forEach((cb: HTMLInputElement) => cb.checked = vcardsSelectAll.checked);
 }
-function getVcardsFormData(appData:IApplicationData): IRowVcardForm[] {
-    console.log(`get vcards form data`);
-    const data: IRowVcardForm[] = [];
-    const companyData = appData.company_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
+function getVcardsCompanyFormData(appData: IApplicationData): IApplicationData["company"] {
+    return appData.company_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
         o[fn] = getInputValue(`vc-${fn}`);
         return o;
     }, {});
-    Array.from(document.querySelectorAll(`#contents .data-row-selector`))
-        .forEach((cb: HTMLInputElement) => {
+}
+function getVcardsEmployeesFormData(appData: IApplicationData): IRowVcardForm[] {
+    return Array.from(document.querySelectorAll(`#contents .data-row-selector`))
+        .map((cb: HTMLInputElement) => {
             const rowi = cb.dataset.row;
             const getVcInputValue = (vn: string) => getInputValue(`vc-${rowi}-${vn}`);
             const employeeData = appData.employee_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
@@ -293,11 +296,39 @@ function getVcardsFormData(appData:IApplicationData): IRowVcardForm[] {
             }
             const rowData = {
                 rowi,
-                ...companyData,
                 ...employeeData
             } as unknown as IRowVcardForm;
-            data.push(rowData);
+            return rowData;
         });
+}
+function getVcardsFormData(appData: IApplicationData): IRowVcardForm[] {
+    console.log(`get vcards form data`);
+    const data: IRowVcardForm[] = [];
+    const companyData = getVcardsCompanyFormData(appData);
+    // Array.from(document.querySelectorAll(`#contents .data-row-selector`))
+    //     .forEach((cb: HTMLInputElement) => {
+    //         const rowi = cb.dataset.row;
+    //         const getVcInputValue = (vn: string) => getInputValue(`vc-${rowi}-${vn}`);
+    //         const employeeData = appData.employee_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
+    //             o[fn] = getVcInputValue(fn);
+    //             return o;
+    //         }, {})
+    //         if (appData.vcard_required_fields.some(f => !employeeData[f])) {
+    //             userMessage(`Employee ${rowi} form incomplete: Missing ${appData.vcard_required_fields
+    //                 .filter(f => !employeeData[f])
+    //                 .join(`, `)
+    //                 } `);
+    //             throw new TypeError(`Employee ${rowi} vcard form Incomplete`);
+    //         }
+    //         const rowData = {
+    //             rowi,
+    //             ...companyData,
+    //             ...employeeData
+    //         } as unknown as IRowVcardForm;
+    //         data.push(rowData);
+    //     });
+    const employeeRowData = getVcardsEmployeesFormData(appData);
+    data.push(...employeeRowData.map(v => ({ ...v, ...companyData })));
     console.log(`got ${data.length} rows`)
     return data
 }
@@ -358,28 +389,39 @@ async function vcardsDownloadManyHandler() {
     ziplink.click();
 }
 async function applyAppData() {
-    const {vcardsTable} = getPointers();
+    const { vcardsTable } = getPointers();
     // get app data
     const { company, employee_data, company_form_fields } = await window.dataapi.getappdata();
     // set company form data
-    company_form_fields.forEach((f:string) => {
+    company_form_fields.forEach((f: string) => {
         setInputValue(`vc-${f}`, company[f]);
     }, {});
     // clear employee data form
     Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector)).forEach(tr => tr.remove());
     // add employee data
     for (const dataRow of employee_data)
-        await vcardsAddDataRow(undefined,dataRow);
+        await vcardsAddDataRow(undefined, dataRow);
 }
 async function vcardsDataLoadHandler() {
     await window.dataapi.loaddata();
     userMessage(`Data loaded`);
-    applyAppData()
+    applyAppData();
+}
+async function vcardsDataDownloadHandler() {
+    const appData = await window.dataapi.getappdata();
+    const companyData = getVcardsCompanyFormData(appData);
+    const employeeData = getVcardsEmployeesFormData(appData);
+    await window.dataapi.setappdata({
+        company: companyData,
+        employee_data: employeeData
+    });
+    // const updatedAppData = await window.dataapi.getappdata();
+    await window.dataapi.saveappdata();
 }
 // navigation common
 function addPageEventListeners(pageName: string) {
     try {
-        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll, vcardsDldBtn, vcardsdataloadbtn } = getPointers();
+        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll, vcardsDldBtn, vcardsdataloadbtn, vcardsdatadownloadbtn } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
             qrdldbtn.addEventListener(`click`, downloadQr);
@@ -393,6 +435,7 @@ function addPageEventListeners(pageName: string) {
             vcardsGenBtn.addEventListener(`click`, vcardsGenHandler);
             vcardsDldBtn.addEventListener(`click`, vcardsDownloadManyHandler);
             vcardsdataloadbtn.addEventListener(`click`, vcardsDataLoadHandler);
+            vcardsdatadownloadbtn.addEventListener(`click`, vcardsDataDownloadHandler);
         }
     } catch (err) {
         console.log(`Cannot add page listeners: ${err.message}`);
