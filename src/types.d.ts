@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import { QRCodeOptions } from "qrcode";
 
 export interface IImgFileDesc {
@@ -25,6 +26,22 @@ export interface IVcardForm {
     addresscountry?: string;
     title?: string;
 }
+export interface IApplicationData{
+    style: {[key:string]:string};
+    company: {[key:string]:string};
+    employee_data: {[key:string]:string}[];
+    company_form_fields: string[];
+    employee_form_fields: string[];
+    vcard_required_fields: string[];
+}
+export interface IApplicationDataUpdate{
+    style?: {[key:string]:string};
+    company?: {[key:string]:string};
+    employee_data?: {[key:string]:string}[];
+    company_form_fields?: string[];
+    employee_form_fields?: string[];
+    vcard_required_fields?: string[];
+}
 
 declare global {
     interface Window {
@@ -37,6 +54,11 @@ declare global {
         };
         zipapi: {
             zipimages(images: IImgFileDesc[]): Promise<Buffer>;
+        };
+        dataapi: {
+            loaddata(): Promise<void>;
+            getappdata(): Promise<IApplicationData>;
+            setappdata(data:IApplicationDataUpdate): Promise<void>;
         };
     }
 }

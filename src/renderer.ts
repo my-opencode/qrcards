@@ -1,4 +1,5 @@
-import { IImgFileDesc } from "./types";
+import { IApplicationData, IImgFileDesc } from "./types";
+const vcardsEmployeeRowSelector = `tr[data-is-employee-row=true]`;
 
 const pageContentDiv = document.getElementById(`contents`);
 // Common
@@ -15,6 +16,7 @@ function getPointers() {
     const vcardsGenBtn = document.querySelector(`#contents #vcardsgenbtn`);
     const vcardsDldBtn = document.querySelector(`#contents #vcardsdldbtn`);
     const vcardsSelectAll = document.querySelector(`#contents #vcardsall`) as HTMLInputElement;
+    const vcardsdataloadbtn = document.querySelector(`#contents #vcardsdataloadbtn`);
     const ziplink = document.querySelector('#contents #zipdldlink') as HTMLAnchorElement;
     return {
         qrdata,
@@ -29,12 +31,17 @@ function getPointers() {
         vcardsGenBtn,
         vcardsSelectAll,
         vcardsTable,
+        vcardsdataloadbtn,
         ziplink
     }
 }
 function getInputValue(id: string): string | undefined {
     const i = document.querySelector(`#contents #${id}`) as HTMLInputElement;
     return i?.value;
+}
+function setInputValue(id: string, value:string) {
+    const i = document.querySelector(`#contents #${id}`) as HTMLInputElement;
+    i.value = value;
 }
 function userMessage(text: string) {
     const d = document.createElement(`div`);
@@ -49,8 +56,8 @@ function svgToPng(svg: SVGAElement): Promise<string> {
     const clonedSvg = svg.cloneNode(true) as SVGSVGElement;
     clonedSvg.removeAttribute('class');
     let { width, height } = (clonedSvg as unknown as SVGSVGElement).getBBox();
-    if(!width) width = clonedSvg.getBoundingClientRect().width || 2000;
-    if(!height) height =  clonedSvg.getBoundingClientRect().height || 2000;
+    if (!width) width = clonedSvg.getBoundingClientRect().width || 2000;
+    if (!height) height = clonedSvg.getBoundingClientRect().height || 2000;
     const svgBlob = new Blob([clonedSvg.outerHTML], { type: 'image/svg+xml' });
     console.log(`svg blob ok`);
     // svg blob to canvas blob url
@@ -191,18 +198,17 @@ function vcardsRmvDataRow(event: MouseEvent) {
         if (row) row.remove();
     }
 }
-function vcardsAddDataRow() {
+async function vcardsAddDataRow(event?:MouseEvent,employeeData?:{[key:string]:string}) {
     console.log(`add data row`);
+    const {employee_form_fields} = await window.dataapi.getappdata();
     const { vcardsTable } = getPointers();
     if (!vcardsTable) return;
-    const rowi = Array.from(vcardsTable.getElementsByTagName(`tr`)).length + 1;
-    const fields = [
-        `prefix`, `surname`, `names`, `suffix`, `fullname`, `title`, `bdate`, `email`, `phonework`, `phonemobile`, `phonemobilepersonal`
-    ];
+    const rowi = Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector)).length;
 
     const row = document.createElement(`tr`);
     row.setAttribute(`id`, `vc-${rowi}`);
     row.setAttribute(`data-row`, `${rowi}`);
+    row.setAttribute(`data-is-employee-row`, `true`);
     // select
     {
         const td = document.createElement(`td`);
@@ -215,15 +221,14 @@ function vcardsAddDataRow() {
         row.appendChild(td);
     }
     // fields
-    for (const f of fields) {
+    for (const f of employee_form_fields) {
         const td = document.createElement(`td`);
         const i = document.createElement(`input`);
         i.setAttribute(`type`, `text`);
-        i.setAttribute(`id`, `vc-${rowi}-${f}`)
-        i.setAttribute(`size`, `10`)
-
-        i.setAttribute(`value`, `test ${f}`)
-
+        i.setAttribute(`id`, `vc-${rowi}-${f}`);
+        i.setAttribute(`size`, `10`);
+        if (employeeData)
+            i.setAttribute(`value`, employeeData[f]);
         td.appendChild(i);
         row.appendChild(td);
     }
@@ -264,38 +269,10 @@ function vcardsHandlerSelectDeselectAll() {
     Array.from(document.querySelectorAll(`#contents .data-row-selector`))
         .forEach((cb: HTMLInputElement) => cb.checked = vcardsSelectAll.checked);
 }
-const vcardsCompanyFormFields = [
-    `company`,
-    `addressdetails`,
-    `addresslocalitycity`,
-    `addressregion`,
-    `addresszip`,
-    `addresscountry`,
-    `timezone`,
-    `phonework`,
-    `phonemobile`,
-    `websitework`,
-];
-const vcardsEmployeeFormFields = [
-    "bday",
-    "email",
-    "phonework",
-    "phonemobile",
-    "phonemobilepersonal",
-    "surname",
-    "names",
-    "prefix",
-    "suffix",
-    "fullname",
-    "title"
-];
-const vcardRequiredFields = [
-    `surname`, `names`, `fullname`
-];
-function getVcardsFormData(): IRowVcardForm[] {
+function getVcardsFormData(appData:IApplicationData): IRowVcardForm[] {
     console.log(`get vcards form data`);
     const data: IRowVcardForm[] = [];
-    const companyData = vcardsCompanyFormFields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
+    const companyData = appData.company_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
         o[fn] = getInputValue(`vc-${fn}`);
         return o;
     }, {});
@@ -303,12 +280,12 @@ function getVcardsFormData(): IRowVcardForm[] {
         .forEach((cb: HTMLInputElement) => {
             const rowi = cb.dataset.row;
             const getVcInputValue = (vn: string) => getInputValue(`vc-${rowi}-${vn}`);
-            const employeeData = vcardsEmployeeFormFields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
+            const employeeData = appData.employee_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
                 o[fn] = getVcInputValue(fn);
                 return o;
             }, {})
-            if (vcardRequiredFields.some(f => !employeeData[f])) {
-                userMessage(`Employee ${rowi} form incomplete: Missing ${vcardRequiredFields
+            if (appData.vcard_required_fields.some(f => !employeeData[f])) {
+                userMessage(`Employee ${rowi} form incomplete: Missing ${appData.vcard_required_fields
                     .filter(f => !employeeData[f])
                     .join(`, `)
                     } `);
@@ -340,7 +317,8 @@ async function generateAndStoreQr(rowi: string, data: string) {
 }
 async function vcardsGenHandler() {
     console.log(`vcards generate button clicked`);
-    const formObjects = getVcardsFormData();
+    const appData = await window.dataapi.getappdata();
+    const formObjects = getVcardsFormData(appData);
     for (const o of formObjects) {
         const vcard = await window.vcardapi.vcard(o);
         generateAndStoreQr(o.rowi, vcard);
@@ -349,7 +327,7 @@ async function vcardsGenHandler() {
 function getSelectedVcardsRows(): HTMLElement[] {
     // list selected rows
     const { vcardsSelectAll, vcardsTable } = getPointers();
-    let tableRows = Array.from(vcardsTable.getElementsByTagName(`tr`));
+    let tableRows = Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector) as unknown as HTMLElement[]);
     if (!vcardsSelectAll.checked) {
         tableRows = tableRows.filter(tr => (tr.querySelector(`input[type=checkbox]`) as HTMLInputElement)?.checked);
     }
@@ -379,10 +357,29 @@ async function vcardsDownloadManyHandler() {
     ziplink.href = URL.createObjectURL(new Blob([zip]));
     ziplink.click();
 }
+async function applyAppData() {
+    const {vcardsTable} = getPointers();
+    // get app data
+    const { company, employee_data, company_form_fields } = await window.dataapi.getappdata();
+    // set company form data
+    company_form_fields.forEach((f:string) => {
+        setInputValue(`vc-${f}`, company[f]);
+    }, {});
+    // clear employee data form
+    Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector)).forEach(tr => tr.remove());
+    // add employee data
+    for (const dataRow of employee_data)
+        await vcardsAddDataRow(undefined,dataRow);
+}
+async function vcardsDataLoadHandler() {
+    await window.dataapi.loaddata();
+    userMessage(`Data loaded`);
+    applyAppData()
+}
 // navigation common
 function addPageEventListeners(pageName: string) {
     try {
-        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll, vcardsDldBtn } = getPointers();
+        const { qrgenbtn, qrdldbtn, vcardqrgenbtn, vcardsGenBtn, vcardsAddRowBtn, vcardsSelectAll, vcardsDldBtn, vcardsdataloadbtn } = getPointers();
         if (pageName === `plaintext`) {
             qrgenbtn.addEventListener(`click`, () => generateAndDisplayQr());
             qrdldbtn.addEventListener(`click`, downloadQr);
@@ -395,6 +392,7 @@ function addPageEventListeners(pageName: string) {
             vcardsSelectAll.addEventListener(`change`, vcardsHandlerSelectDeselectAll);
             vcardsGenBtn.addEventListener(`click`, vcardsGenHandler);
             vcardsDldBtn.addEventListener(`click`, vcardsDownloadManyHandler);
+            vcardsdataloadbtn.addEventListener(`click`, vcardsDataLoadHandler);
         }
     } catch (err) {
         console.log(`Cannot add page listeners: ${err.message}`);
