@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { QRCodeOptions } from "qrcode";
-import { IImgFileDesc, IVcardForm } from "./types";
+import { IApplicationDataUpdate, IImgFileDesc, IVcardForm } from "./types";
+
 
 
 contextBridge.exposeInMainWorld('qrapi', {
@@ -12,6 +13,11 @@ contextBridge.exposeInMainWorld('vcardapi', {
 });
 contextBridge.exposeInMainWorld('zipapi', {
     zipimages: (images: IImgFileDesc[]) => ipcRenderer.invoke('zipimages', images),
+});
+contextBridge.exposeInMainWorld('dataapi', {
+    loaddata: () => ipcRenderer.invoke('loaddata'),
+    getappdata: () => ipcRenderer.invoke('getappdata'),
+    setappdata: (data: IApplicationDataUpdate) => ipcRenderer.invoke('setappdata', data),
 });
 
 // window.addEventListener('DOMContentLoaded', () => {
