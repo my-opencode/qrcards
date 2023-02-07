@@ -34,6 +34,7 @@ export interface IApplicationData {
     employee_form_fields: string[];
     vcard_required_fields: string[];
 }
+
 export interface IApplicationDataUpdate {
     style?: { [key: string]: string };
     company?: { [key: string]: string };

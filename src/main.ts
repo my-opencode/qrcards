@@ -3,6 +3,7 @@ import path from 'path';
 import { initHandlers } from './handlers';
 import { initMenu } from './menu';
 let mainWindow:BrowserWindow;
+
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 800,
@@ -10,6 +11,7 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
+
     });
     mainWindow.loadFile(path.resolve(__dirname, '../html/index.html'));
 };
