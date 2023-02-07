@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('dataapi', {
     getappdata: () => ipcRenderer.invoke('getappdata'),
     setappdata: (data: IApplicationDataUpdate) => ipcRenderer.invoke('setappdata', data),
     saveappdata: () => ipcRenderer.invoke(`saveappdata`),
+    handleMenuAppDataLoaded: (callback: () => void) => ipcRenderer.on('appDataReloaded', callback),
+    handleMenuAppDataSave: (callback: () => void) => ipcRenderer.on('appDataSave', callback),
 });
 
 // window.addEventListener('DOMContentLoaded', () => {
@@ -30,3 +32,8 @@ contextBridge.exposeInMainWorld('dataapi', {
 //         replaceText(`${dependency}-version`, process.versions[dependency])
 //     }
 // })
+
+contextBridge.exposeInMainWorld('pageapi', {
+    pageChanged: (pageName:string)=>ipcRenderer.invoke(`pageUpdate`, pageName),
+    handleGoTo: (callback: (eventPhantom: Event, pageName: string) => void) => ipcRenderer.on('page-go-to', callback),
+});

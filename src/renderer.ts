@@ -35,7 +35,7 @@ function getPointers() {
         vcardsdataloadbtn,
         vcardsdatadownloadbtn,
         ziplink
-    }
+    };
 }
 function getInputValue(id: string): string | undefined {
     const i = document.querySelector(`#contents #${id}`) as HTMLInputElement;
@@ -96,7 +96,7 @@ async function generateAndDisplayQr(data?: string) {
     console.log(`gen and display qr`);
     const { qrdata, qrdisplay, qrdisplaycontainer, qrdldbtn } = getPointers();
     if (!data && !qrdata?.value) {
-        userMessage(`No data for qr. Skipping generation.`)
+        userMessage(`No data for qr. Skipping generation.`);
         return;
     }
     qrdisplay.innerHTML = ``;
@@ -184,7 +184,7 @@ function getVcardFormData(): IVcardForm {
         addresscountry: getVcInputValue(`addresscountry`),
         title: getVcInputValue(`title`)
 
-    }
+    };
 }
 async function vcardGenHandler() {
     const vcard = await window.vcardapi.vcard(getVcardFormData());
@@ -217,9 +217,9 @@ async function vcardsAddDataRow(event?: MouseEvent, employeeData?: { [key: strin
         const td = document.createElement(`td`);
         const i = document.createElement(`input`);
         i.setAttribute(`type`, `checkbox`);
-        i.setAttribute(`id`, `vc-${rowi}-select`)
-        i.setAttribute(`data-row`, `${rowi}`)
-        i.classList.add(`data-row-selector`)
+        i.setAttribute(`id`, `vc-${rowi}-select`);
+        i.setAttribute(`data-row`, `${rowi}`);
+        i.classList.add(`data-row-selector`);
         td.appendChild(i);
         row.appendChild(td);
     }
@@ -242,10 +242,10 @@ async function vcardsAddDataRow(event?: MouseEvent, employeeData?: { [key: strin
         b.setAttribute(`class`, `delete-row-btn`);
         b.setAttribute(`data-row`, `${rowi}`);
         b.innerText = `X`;
-        b.addEventListener(`click`, vcardsRmvDataRow)
+        b.addEventListener(`click`, vcardsRmvDataRow);
         td.appendChild(b);
         const s = document.createElementNS('http://www.w3.org/2000/svg', `svg`);
-        s.classList.add(`no-display`)
+        s.classList.add(`no-display`);
         s.setAttribute(`xmlns`, 'http://www.w3.org/2000/svg');
         s.setAttribute(`id`, `qr-${rowi}`);
         s.setAttribute(`height`, `2000`);
@@ -286,7 +286,7 @@ function getVcardsEmployeesFormData(appData: IApplicationData): IRowVcardForm[] 
             const employeeData = appData.employee_form_fields.reduce((o: { [key: string]: string | undefined }, fn: string) => {
                 o[fn] = getVcInputValue(fn);
                 return o;
-            }, {})
+            }, {});
             if (appData.vcard_required_fields.some(f => !employeeData[f])) {
                 userMessage(`Employee ${rowi} form incomplete: Missing ${appData.vcard_required_fields
                     .filter(f => !employeeData[f])
@@ -329,13 +329,13 @@ function getVcardsFormData(appData: IApplicationData): IRowVcardForm[] {
     //     });
     const employeeRowData = getVcardsEmployeesFormData(appData);
     data.push(...employeeRowData.map(v => ({ ...v, ...companyData })));
-    console.log(`got ${data.length} rows`)
-    return data
+    console.log(`got ${data.length} rows`);
+    return data;
 }
 async function generateAndStoreQr(rowi: string, data: string) {
     console.log(`gen and store qr`);
-    const qrdisplaycontainer = document.querySelector(`#contents #qr-${rowi}`)
-    const qrdisplay = document.querySelector(`#contents #qrdisplay-${rowi}`)
+    const qrdisplaycontainer = document.querySelector(`#contents #qr-${rowi}`);
+    const qrdisplay = document.querySelector(`#contents #qrdisplay-${rowi}`);
     const { vcardsDldBtn } = getPointers();
 
     qrdisplay.innerHTML = ``;
@@ -418,6 +418,14 @@ async function vcardsDataDownloadHandler() {
     // const updatedAppData = await window.dataapi.getappdata();
     await window.dataapi.saveappdata();
 }
+window.dataapi.handleMenuAppDataLoaded(function(){
+    userMessage(`Data loaded`);
+    applyAppData();
+}
+);
+window.dataapi.handleMenuAppDataSave(
+    vcardsDataDownloadHandler
+);
 // navigation common
 function addPageEventListeners(pageName: string) {
     try {
@@ -443,14 +451,17 @@ function addPageEventListeners(pageName: string) {
 }
 function initPage(pageName: string) {
     if (pageName === `vcards`) {
-        vcardsAddDataRow()
+        vcardsAddDataRow();
     }
 }
 // interface ImportHTMLLinkElement extends HTMLLinkElement {
 //     import: HTMLElement;
 // }
+window.pageapi.handleGoTo(function(eventPhantom:Event, pageName:string){
+    changePage(pageName);
+});
 function changePage(pageName: string) {
-    console.log(`changing page to ${pageName}`)
+    console.log(`changing page to ${pageName}`);
     // const links = document.querySelectorAll(`link[rel="import"][data-page="${pageName}"]`) as NodeListOf<ImportHTMLLinkElement>;
     // const link = links[0];
     // if (!link) return;
@@ -465,6 +476,7 @@ function changePage(pageName: string) {
     pageContentDiv.innerHTML = ``;
     pageContentDiv.appendChild(clone);
 
+    window.pageapi.pageChanged(pageName);
     addPageEventListeners(pageName);
     initPage(pageName);
 }
