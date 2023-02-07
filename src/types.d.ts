@@ -26,21 +26,26 @@ export interface IVcardForm {
     addresscountry?: string;
     title?: string;
 }
-export interface IApplicationData{
-    style: {[key:string]:string};
-    company: {[key:string]:string};
-    employee_data: {[key:string]:string}[];
+export interface IApplicationData {
+    style: { [key: string]: string };
+    company: { [key: string]: string };
+    employee_data: { [key: string]: string }[];
     company_form_fields: string[];
     employee_form_fields: string[];
     vcard_required_fields: string[];
 }
-export interface IApplicationDataUpdate{
-    style?: {[key:string]:string};
-    company?: {[key:string]:string};
-    employee_data?: {[key:string]:string}[];
+
+export interface IApplicationDataUpdate {
+    style?: { [key: string]: string };
+    company?: { [key: string]: string };
+    employee_data?: { [key: string]: string }[];
     company_form_fields?: string[];
     employee_form_fields?: string[];
     vcard_required_fields?: string[];
+}
+
+export interface IApplicationState {
+    pageName: string
 }
 
 declare global {
@@ -58,8 +63,14 @@ declare global {
         dataapi: {
             loaddata(): Promise<void>;
             getappdata(): Promise<IApplicationData>;
-            setappdata(data:IApplicationDataUpdate): Promise<void>;
+            setappdata(data: IApplicationDataUpdate): Promise<void>;
             saveappdata(): Promise<void>;
+            handleMenuAppDataLoaded(callback: () => void): void;
+            handleMenuAppDataSave(callback: () => void): void;
         };
+        pageapi: {
+            pageChanged: (pageName: string) => void,
+            handleGoTo(callback: (eventPhantom: Event, pageName: string) => void): void
+        }
     }
 }
