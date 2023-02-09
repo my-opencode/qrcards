@@ -296,6 +296,43 @@
     </div>
   </template>
 
+  <template id="template-style">
+    <div class="centered-container">
+      <h1 class="txt-center">Qr Style</h1>
+      <details>
+        <summary>Colors</summary>
+        <button id="qrstylecolorsavebtn">Save changes</button>
+        <input type="color" name="qrstyledotcolor" id="qrstyledotcolor">
+        <input type="checkbox" name="qrstylecheckeyecolor" id="qrstylecheckeyecolor">
+        <input type="color" name="qrstyleeyecolor" id="qrstyleeyecolor">
+        <input type="color" name="qrstylepupilcolor" id="qrstylepupilcolor">
+        <input type="color" name="qrstylebgcolor" id="qrstylebgcolor">
+      </details>
+      <details>
+        <summary>Logo</summary>
+        <button id="qrstylelogosavebtn">Save changes</button>
+        <div class="qrstylelogopreview"></div>
+        <input type="file" name="qrstylelogo" id="qrstylelogo">
+      </details>
+      <details>
+        <summary>Design</summary>
+        <button id="qrstyledesignsavebtn">Save changes</button>
+        <div class="qrstyledotstyleselect">
+          <input type="radio" name="dotstyle-1" id="dotstyle-1">
+          <input type="radio" name="dotstyle-2" id="dotstyle-2">
+        </div>
+        <div class="qrstyleeyestyleselect">
+          <input type="radio" name="eyestyle-1" id="eyestyle-1">
+          <input type="radio" name="eyestyle-2" id="eyestyle-2">
+        </div>
+        <div class="qrstylepupilstyleselect">
+          <input type="radio" name="pupilstyle-1" id="pupilstyle-1">
+          <input type="radio" name="pupilstyle-2" id="pupilstyle-2">
+        </div>
+      </details>
+    </div>
+  </template>
+
   <script>if (!exports) var exports = {};</script>
   <script src="../dist/renderer.js"></script>
 </body>
