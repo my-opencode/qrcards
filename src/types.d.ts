@@ -38,10 +38,10 @@ export interface IApplicationDataStyle {
     colorBg?: string;
     colorDot?: string;
     colorEye?: string;
-    colorPupil?: string;
+    colorIris?: string;
     spritesDots?: string;
     spritesEyes?: string;
-    spritesPupils?: string;
+    spritesIriss?: string;
     logo?: string;
 }
 
@@ -55,7 +55,7 @@ export interface IApplicationData {
 }
 
 export interface IApplicationDataUpdate {
-    style?: { [key: string]: string };
+    style?: IApplicationDataStyle;
     company?: IVcardCompanyForm;
     employee_data?: IVcardEmployeeForm[];
     company_form_fields?: (keyof IVcardCompanyForm)[];

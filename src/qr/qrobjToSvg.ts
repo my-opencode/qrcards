@@ -50,9 +50,9 @@ export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOp
 
 function DrawADot(x: (n: number) => number, y: (n: number) => number, w: number) {
     console.log(`DrawADot: w:`, w);
-    const { colorDot, colorEye, colorPupil } = applicationData.style;
-    const color = (coli: number, rowi: number) => colorPupil && isIrisDot(coli, rowi, w)
-        ? colorPupil
+    const { colorDot, colorEye, colorIris } = applicationData.style;
+    const color = (coli: number, rowi: number) => colorIris && isIrisDot(coli, rowi, w)
+        ? colorIris
         : colorEye && isEyeDot(coli, rowi, w)
             ? colorEye
             : colorDot;
