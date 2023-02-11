@@ -19,6 +19,7 @@ export function init(/* window: Window, document: Document */): void {
   );
   window.applyData = applyAppData;
   addPageEventListeners();
+  applyAppData();
 }
 
 export function addPageEventListeners(): void {
