@@ -1,6 +1,6 @@
-import { QRCode } from "qrcode";
+import * as QRCode  from "qrcode";
 
-export function qrobjToSvg(qrcode: QRCode): { svg: string, height: number, width: number } {
+export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number, width: number } {
     // known constants
     const dotSize = 10;
     const marginSize = 2 * dotSize;
@@ -31,4 +31,15 @@ export function qrobjToSvg(qrcode: QRCode): { svg: string, height: number, width
     // return values
     // console.log({ svg, height, width });
     return { svg, height, width };
+}
+
+export function qrobjToSvgHandler (event:Event, data:string, o: QRCode.QRCodeOptions):ReturnType<typeof qrobjToSvg> {
+    console.log(`create qr code for`, data);
+    const qrobj = QRCode.create(data, o);
+    const { svg, height, width } = qrobjToSvg(qrobj);
+    return {
+        svg,
+        height,
+        width
+    };
 }
