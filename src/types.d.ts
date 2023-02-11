@@ -34,8 +34,19 @@ export interface IVcardEmployeeForm {
 }
 export type IVcardForm = IVcardCompanyForm & IVcardEmployeeForm;
 
+export interface IApplicationDataStyle {
+    colorBg?: string;
+    colorDot?: string;
+    colorEye?: string;
+    colorPupil?: string;
+    spritesDots?: string;
+    spritesEyes?: string;
+    spritesPupils?: string;
+    logo?: string;
+}
+
 export interface IApplicationData {
-    style: { [key: string]: string };
+    style: IApplicationDataStyle;
     company: IVcardCompanyForm;
     employee_data: IVcardEmployeeForm[];
     company_form_fields: (keyof IVcardCompanyForm)[];
