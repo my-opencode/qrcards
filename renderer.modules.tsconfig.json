@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
+    "moduleResolution":"node",
     "target":"ES2021",
-    "module": "Node16",
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "html/js",
     "baseUrl": ".",
+    "lib":["DOM"],
     "paths": {
       "*": ["node_modules/*"]
-    },
-    "lib":["DOM"],
+    }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": ["src/pages","src/renderer"],
+  "include": ["src/render"]
 }
