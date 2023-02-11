@@ -2,8 +2,6 @@ import { contextBridge, ipcRenderer } from "electron";
 import { QRCodeOptions } from "qrcode";
 import { IApplicationDataUpdate, IImgFileDesc, IVcardForm } from "./types";
 
-
-
 contextBridge.exposeInMainWorld('qrapi', {
     qrcode: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcode', data, o),
     qrcodesvg: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcodesvg', data, o),
@@ -21,18 +19,7 @@ contextBridge.exposeInMainWorld('dataapi', {
     saveappdata: () => ipcRenderer.invoke(`saveappdata`),
     handleMenuAppDataLoaded: (callback: () => void) => ipcRenderer.on('appDataReloaded', callback),
     handleMenuAppDataSave: (callback: () => void) => ipcRenderer.on('appDataSave', callback),
-
 });
-
-// window.addEventListener('DOMContentLoaded', () => {
-//     const replaceText = (selector:string, text:string) => {
-//         const element = document.getElementById(selector)
-//         if (element) element.innerText = text
-//     }
-//     for (const dependency of ['chrome', 'node', 'electron']) {
-//         replaceText(`${dependency}-version`, process.versions[dependency])
-//     }
-// })
 
 contextBridge.exposeInMainWorld('pageapi', {
     pageChanged: (pageName:string)=>ipcRenderer.invoke(`pageUpdate`, pageName),

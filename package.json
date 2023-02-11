@@ -4,13 +4,18 @@
   "description": "Electron App to create Qr Code based Vcards",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc",
+    "clean":"rm -r dist/* html/*.js html/js/*",
+    "build:main":"tsc",
+    "build:renderer":"tsc -p ./renderer.modules.tsconfig.json",
+    "build:clean": "npm run clean && npm run build",
+    "build": "npm run build:main && npm run build:renderer",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "npm run build && electron ./dist/main.js",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "importmake": "electron-forge import && npm run make"
   },
+  "extraResources": ["./html/**"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/my-opencode/qrcards.git"

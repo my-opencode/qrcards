@@ -15,10 +15,10 @@
   </head>
 
   <body>
-    <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
+    <!-- <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
     <button class="nav-link" data-page="vcard">Vcard Qr Code</button>
     <button class="nav-link" data-page="vcards">Batch Qr Vcards</button>
-    <button class="nav-link" data-page="styler">Qr Style</button>
+    <button class="nav-link" data-page="styler">Qr Style</button> -->
     <div id="contents">Select an action to do.</div>
 
     <template id="template-plaintext">
@@ -503,6 +503,6 @@
     <script>
       if (!exports) var exports = {};
     </script>
-    <script src="../dist/renderer.js"></script>
+    <script type="module" src="./js/renderer.js"></script>
   </body>
 </html>
