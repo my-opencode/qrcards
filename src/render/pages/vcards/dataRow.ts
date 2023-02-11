@@ -65,7 +65,7 @@ export async function vcardsAddDataRow(event?: MouseEvent, employeeData?: IVcard
     sdefr.setAttribute(`id`, `dot`);
     sdefr.setAttribute(`height`, `10.15`);
     sdefr.setAttribute(`width`, `10.15`);
-    sdefr.setAttribute(`fill`, `black`);
+    // sdefr.setAttribute(`fill`, `black`);
     sdef.appendChild(sdefr);
     s.appendChild(sdef);
     const sqr = document.createElementNS('http://www.w3.org/2000/svg', `g`);

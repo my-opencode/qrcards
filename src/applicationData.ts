@@ -91,7 +91,7 @@ export function appDataGet(): IApplicationData {
 }
 
 export function appDataSet(eventPhantom:Event, data: IApplicationDataUpdate): void {
-  if (data.style) applicationData.style = data.style;
+  if (data.style) applicationData.style = { ...applicationData.style, ...data.style};
   if (data.company) applicationData.company = data.company;
   if (data.employee_data) applicationData.employee_data = data.employee_data;
   if (data.company_form_fields) applicationData.company_form_fields = data.company_form_fields;
