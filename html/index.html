@@ -61,6 +61,57 @@
       z-index: 999;
       background: white;
     }
+
+      .qrstylelogopreview {
+        width: 150px;
+        height: 150px;
+        border: gray 1px solid;
+        background-color: lightgray;
+      }
+
+      .radio-sprites .radio-selector .sprite-preview {
+        width: 60px;
+        height: 60px;
+        margin-left: 5px;
+        border: gray 1px solid;
+        background-color: lightgray;
+      }
+
+      .sprite-preview {
+        margin: 4px;
+      }
+
+      .radio-sprites [type="radio"]:checked ~ .radio-selector .sprite-preview {
+        border: 5px blue solid;
+        margin: 0;
+      }
+
+      summary {
+        margin-top: 40px;
+        font-size: larger;
+        margin-bottom: 10px;
+      }
+
+      #additional-colors {
+        display: none;
+      }
+
+      #qrstylecheckeyecolor:checked ~ #additional-colors {
+        display: block;
+      }
+
+      .txt-warning {
+        color: red !important;
+      }
+
+
+      .radio-sprites {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+
   </style>
   <!-- <link rel="import" href="../html/pages/qr-simple.html" data-page="plaintext" />
   <link rel="import" href="../html/pages/qr-vcard.html" data-page="vcard" /> -->
@@ -76,9 +127,8 @@
   <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
   <button class="nav-link" data-page="vcard">Vcard Qr Code</button>
   <button class="nav-link" data-page="vcards">Batch Qr Vcards</button>
-  <div id="contents">
-    Select an action to do.
-  </div>
+    <button class="nav-link" data-page="styler">Qr Style</button>
+    <div id="contents">Select an action to do.</div>
 
   <template id="template-plaintext">
     <div class="centered-container">
@@ -296,38 +346,159 @@
     </div>
   </template>
 
-  <template id="template-style">
+    <template id="template-styler">
     <div class="centered-container">
       <h1 class="txt-center">Qr Style</h1>
-      <details>
-        <summary>Colors</summary>
-        <button id="qrstylecolorsavebtn">Save changes</button>
-        <input type="color" name="qrstyledotcolor" id="qrstyledotcolor">
-        <input type="checkbox" name="qrstylecheckeyecolor" id="qrstylecheckeyecolor">
-        <input type="color" name="qrstyleeyecolor" id="qrstyleeyecolor">
-        <input type="color" name="qrstylepupilcolor" id="qrstylepupilcolor">
-        <input type="color" name="qrstylebgcolor" id="qrstylebgcolor">
+        <!-- Colors -->
+        <details open>
+          <summary>
+            Colors
+            <button id="qrstylecolorsavebtn" disabled>Save changes</button>
+          </summary>
+          <input
+            type="color"
+            name="qrstyledotcolor"
+            id="qrstyledotcolor"
+            value="#000000"
+          />
+          <label for="qrstyledotcolor">Color of the dots</label>
+          <br />
+          <input
+            type="color"
+            name="qrstylebgcolor"
+            id="qrstylebgcolor"
+            value="#FFFFFF"
+          />
+          <label for="qrstylebgcolor">Color of the background</label>
+          <br />
+          <input
+            type="checkbox"
+            name="qrstylecheckeyecolor"
+            id="qrstylecheckeyecolor"
+          />
+          <label for="qrstylecheckeyecolor"
+            >Different colors for the eyes</label
+          >
+          <br />
+          <div id="additional-colors">
+            <input
+              type="color"
+              name="qrstyleeyecolor"
+              id="qrstyleeyecolor"
+              value="#000000"
+            />
+            <label for="qrstyleeyecolor">Eye Color</label>
+            <br />
+            <input
+              type="color"
+              name="qrstylepupilcolor"
+              id="qrstylepupilcolor"
+              value="#000000"
+            />
+            <label for="qrstylepupilcolor">Eye Pupil Color</label>
+          </div>
       </details>
+        <!-- Logo -->
       <details>
-        <summary>Logo</summary>
-        <button id="qrstylelogosavebtn">Save changes</button>
+          <summary>
+            <span class="txt-warning">[Coming Soon]</span> Logo
+            <button id="qrstylelogosavebtn" disabled>Save changes</button>
+          </summary>
+
         <div class="qrstylelogopreview"></div>
-        <input type="file" name="qrstylelogo" id="qrstylelogo">
+          <input type="file" name="qrstylelogo" id="qrstylelogo" />
       </details>
       <details>
-        <summary>Design</summary>
-        <button id="qrstyledesignsavebtn">Save changes</button>
-        <div class="qrstyledotstyleselect">
-          <input type="radio" name="dotstyle-1" id="dotstyle-1">
-          <input type="radio" name="dotstyle-2" id="dotstyle-2">
+          <summary>
+            <span class="txt-warning">[Coming Soon]</span> Design
+            <button id="qrstyledesignsavebtn" disabled>Save changes</button>
+          </summary>
+          <!-- Dots -->
+          <h3>Dot Style</h3>
+          <div class="qrstyledotstyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="dotstyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
+              </div>
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="dotstyle"
+                value="abc"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style abc</span>
+              </div>
+            </label> -->
+          </div>
+          <!-- Eyes -->
+          <h3>Eye Style</h3>
+          <div class="qrstyleeyestyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="eyestyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
+              </div>
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="eyestyle"
+                value="efg"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style EFG</span>
+              </div>
+            </label> -->
+          </div>
+          <!-- Pupils -->
+          <h3>Pupil Style</h3>
+          <div class="qrstylepupilstyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="pupilstyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
         </div>
-        <div class="qrstyleeyestyleselect">
-          <input type="radio" name="eyestyle-1" id="eyestyle-1">
-          <input type="radio" name="eyestyle-2" id="eyestyle-2">
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="pupilstyle"
+                value="hij"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style HIJ</span>
         </div>
-        <div class="qrstylepupilstyleselect">
-          <input type="radio" name="pupilstyle-1" id="pupilstyle-1">
-          <input type="radio" name="pupilstyle-2" id="pupilstyle-2">
+            </label> -->
         </div>
       </details>
     </div>
