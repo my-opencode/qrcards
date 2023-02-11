@@ -71,7 +71,7 @@ function buildMenuTemplate(win: BrowserWindow) {
     submenu: Menu.buildFromTemplate([
       new MenuItem({
         label: `Style`,
-        enabled: false
+        click: () => { win.webContents.send('page-go-to', `styler`); },
       })
     ])
   }));
