@@ -41,7 +41,7 @@ export interface IApplicationDataStyle {
     colorIris?: string;
     spritesDots?: string;
     spritesEyes?: string;
-    spritesIriss?: string;
+    spritesIrises?: string;
     logo?: string;
     logoHeight?: number;
     logoWidth?: number;
@@ -79,6 +79,35 @@ export interface IUploadedImage {
     name: string;
 }
 
+// interface IStrObj { [key: string]: string }
+// declare class Sprites {
+//     displayName: string;
+//     definitions: string;
+//     useIds: IStrObj;
+//     defaultClass: string;
+//     use(id: keyof typeof this.useIds, x: number, y: number, classes: string):string
+// }
+// declare class DotSprites extends Sprites {
+//   category: "dot"
+// }
+// declare class EyeSprites extends Sprites {
+//   category: "eye"
+// }
+// declare class IrisSprites extends Sprites {
+//   category: "iris"
+// }
+export interface ISpriteListItem {
+    id: string,
+    displayName: string
+    // sprites: Sprites | DotSprites | EyeSprites | IrisSprites
+}
+
+export interface ISpritesLists {
+    dots: ISpriteListItem[],
+    eyes: ISpriteListItem[],
+    irises: ISpriteListItem[],
+}
+
 declare global {
     interface Window {
         qrapi: {
@@ -98,7 +127,7 @@ declare global {
             saveappdata(): Promise<void>;
             handleMenuAppDataLoaded(callback: () => void): void;
             handleMenuAppDataSave(callback: () => void): void;
-            styleremovelogo():Promise<void>;
+            styleremovelogo(): Promise<void>;
         };
         pageapi: {
             pageChanged: (pageName: string) => void,
@@ -107,6 +136,9 @@ declare global {
         imageapi: {
             uploadimage: () => Promise<IUploadedImage>,
         };
+        spriteapi: {
+            listsprites: () => Promise<ISpritesLists>
+        }
         applyData(): Promise<void>;
         userMessage(txt: string): void;
     }
