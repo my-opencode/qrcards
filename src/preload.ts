@@ -12,6 +12,9 @@ contextBridge.exposeInMainWorld('vcardapi', {
 contextBridge.exposeInMainWorld('zipapi', {
     zipimages: (images: IImgFileDesc[]) => ipcRenderer.invoke('zipimages', images),
 });
+contextBridge.exposeInMainWorld('imageapi', {
+    uploadimage: () => ipcRenderer.invoke('uploadimage'),
+});
 contextBridge.exposeInMainWorld('dataapi', {
     loaddata: () => ipcRenderer.invoke('loaddata'),
     getappdata: () => ipcRenderer.invoke('getappdata'),

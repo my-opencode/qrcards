@@ -5,6 +5,7 @@ import { appDataLoad, appDataGet, appDataSet, appDataSave } from "./applicationD
 import { statePageUpdateHandler } from './state';
 import { qrobjHandler } from './qr/qrobj';
 import { zipImagesHandler } from './zip/zipImages';
+import { uploadImageHandler } from './image/upload';
 
 export function initHandlers(): void {
     ipcMain.handle(`pageUpdate`, statePageUpdateHandler );
@@ -16,4 +17,5 @@ export function initHandlers(): void {
     ipcMain.handle(`getappdata`, appDataGet);
     ipcMain.handle(`setappdata`, appDataSet);
     ipcMain.handle(`saveappdata`, appDataSave);
+    ipcMain.handle(`uploadimage`, uploadImageHandler);
 }

@@ -1,7 +1,7 @@
 /* eslint-disable no-var */
 import { QRCodeOptions } from "qrcode";
 
-export type PageNames = "plaintext"|"vcard"|"vcards"|"styler";
+export type PageNames = "plaintext" | "vcard" | "vcards" | "styler";
 
 export interface IImgFileDesc {
     filename: string;
@@ -67,7 +67,14 @@ export interface IApplicationState {
     pageName: string
 }
 export interface IDocPointers {
-    [key:string]:Element|HTMLElement|SVGAElement|HTMLInputElement|HTMLAnchorElement
+    [key: string]: Element | HTMLElement | SVGAElement | HTMLInputElement | HTMLAnchorElement
+}
+
+export interface IUploadedImage {
+    buffer: Buffer;
+    width: number;
+    height: number;
+    name: string;
 }
 
 declare global {
@@ -94,7 +101,10 @@ declare global {
             pageChanged: (pageName: string) => void,
             handleGoTo(callback: (eventPhantom: Event, pageName: string) => void): void
         };
-        applyData():Promise<void>;
-        userMessage(txt:string):void;
+        imageapi: {
+            uploadimage: () => Promise<IUploadedImage>,
+        };
+        applyData(): Promise<void>;
+        userMessage(txt: string): void;
     }
 }
