@@ -43,6 +43,8 @@ export interface IApplicationDataStyle {
     spritesEyes?: string;
     spritesIriss?: string;
     logo?: string;
+    logoHeight?: number;
+    logoWidth?: number;
 }
 
 export interface IApplicationData {
