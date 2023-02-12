@@ -121,7 +121,7 @@ function isIrisDot(coli: number, rowi: number, size: number): boolean {
     if (coli === 4 && rowi >= max - 4 && rowi <= max - 2)
         return true;
 }
-const logoMaxQrlength = 5;
+const logoMaxQrlength = 4;
 function addLogo (svg:string,width:number,height:number){
     if (applicationData.style.logo) {
         const {logoWidth,logoHeight,logo} = applicationData.style;
