@@ -20,7 +20,7 @@ body {
   background: white;
 }
 
-.qrstylelogopreview {
+#qrstylelogopreview.placeholder {
   width: 150px;
   height: 150px;
   border: gray 1px solid;
