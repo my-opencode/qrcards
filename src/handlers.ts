@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import { qrobjToSvgHandler } from "./qr/qrobjToSvg";
 import { vcardHandler } from './vcard/vcard';
-import { appDataLoad, appDataGet, appDataSet, appDataSave } from "./applicationData";
+import { appDataLoad, appDataGet, appDataSet, appDataSave, appDataStyleRemoveLogoHandler } from "./applicationData";
 import { statePageUpdateHandler } from './state';
 import { qrobjHandler } from './qr/qrobj';
 import { zipImagesHandler } from './zip/zipImages';
@@ -18,4 +18,5 @@ export function initHandlers(): void {
     ipcMain.handle(`setappdata`, appDataSet);
     ipcMain.handle(`saveappdata`, appDataSave);
     ipcMain.handle(`uploadimage`, uploadImageHandler);
+    ipcMain.handle(`styleremovelogo`, appDataStyleRemoveLogoHandler);
 }

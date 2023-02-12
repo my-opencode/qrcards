@@ -112,3 +112,9 @@ export async function appDataSave():Promise<void> {
   }
   await fs.writeFile(filePath.filePath, JSON.stringify(applicationData, null, ` `), { encoding: `utf-8` });
 }
+
+export function appDataStyleRemoveLogoHandler(event:Event):void{
+  delete applicationData.style.logo;
+  delete applicationData.style.logoHeight;
+  delete applicationData.style.logoWidth;
+}

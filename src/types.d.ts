@@ -98,6 +98,7 @@ declare global {
             saveappdata(): Promise<void>;
             handleMenuAppDataLoaded(callback: () => void): void;
             handleMenuAppDataSave(callback: () => void): void;
+            styleremovelogo():Promise<void>;
         };
         pageapi: {
             pageChanged: (pageName: string) => void,

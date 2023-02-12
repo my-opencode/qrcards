@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('dataapi', {
     saveappdata: () => ipcRenderer.invoke(`saveappdata`),
     handleMenuAppDataLoaded: (callback: () => void) => ipcRenderer.on('appDataReloaded', callback),
     handleMenuAppDataSave: (callback: () => void) => ipcRenderer.on('appDataSave', callback),
+    styleremovelogo: () => ipcRenderer.invoke(`styleremovelogo`),
 });
 
 contextBridge.exposeInMainWorld('pageapi', {
