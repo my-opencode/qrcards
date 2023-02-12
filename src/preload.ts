@@ -24,8 +24,11 @@ contextBridge.exposeInMainWorld('dataapi', {
     handleMenuAppDataSave: (callback: () => void) => ipcRenderer.on('appDataSave', callback),
     styleremovelogo: () => ipcRenderer.invoke(`styleremovelogo`),
 });
+contextBridge.exposeInMainWorld(`spriteapi`, {
+    listsprites: () => ipcRenderer.invoke(`listsprites`)
+});
 
 contextBridge.exposeInMainWorld('pageapi', {
-    pageChanged: (pageName:string)=>ipcRenderer.invoke(`pageUpdate`, pageName),
+    pageChanged: (pageName: string) => ipcRenderer.invoke(`pageUpdate`, pageName),
     handleGoTo: (callback: (eventPhantom: Event, pageName: string) => void) => ipcRenderer.on('page-go-to', callback),
 });

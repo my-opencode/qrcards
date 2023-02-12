@@ -14,5 +14,5 @@
   "include": [
     "src/**/*"
   ],
-  "exclude": ["src/pages","src/renderer"],
+  "exclude": ["src/render"],
 }

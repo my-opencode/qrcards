@@ -6,6 +6,7 @@ import { statePageUpdateHandler } from './state';
 import { qrobjHandler } from './qr/qrobj';
 import { zipImagesHandler } from './zip/zipImages';
 import { uploadImageHandler } from './image/upload';
+import { listAllSpritesHandler } from './sprites';
 
 export function initHandlers(): void {
     ipcMain.handle(`pageUpdate`, statePageUpdateHandler );
@@ -19,4 +20,5 @@ export function initHandlers(): void {
     ipcMain.handle(`saveappdata`, appDataSave);
     ipcMain.handle(`uploadimage`, uploadImageHandler);
     ipcMain.handle(`styleremovelogo`, appDataStyleRemoveLogoHandler);
+    ipcMain.handle(`listsprites`, listAllSpritesHandler);
 }

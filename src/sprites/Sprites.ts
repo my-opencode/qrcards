@@ -1,11 +1,11 @@
 interface IStrObj { [key: string]: string }
 export class Sprites {
-  displayname: string;
+  displayName: string;
   definitions: string;
   useIds: IStrObj;
   defaultClass: string;
   constructor(name:string, definitions: string, useIds: IStrObj, defaultClass?: string) {
-    this.displayname=name;
+    this.displayName=name;
     this.definitions = scaleSprites(10, definitions);
     this.useIds = useIds;
     this.defaultClass = defaultClass || ``;
