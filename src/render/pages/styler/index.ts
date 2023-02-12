@@ -1,9 +1,10 @@
 import { getColorPointers, resetColorForm, saveColorsHandler, saveColorBtnOnHandler } from "./colors.js";
-import { getLogoPointers, uploadDisplayLogoHandler, logoFormApplyData,removeLogoHandler } from "./logo.js";
+import { getLogoPointers, uploadDisplayLogoHandler, logoFormApplyData,removeLogoHandler, saveLogoHandler } from "./logo.js";
 
 export function init(/* window: Window, document: Document */): void {
   window.applyData = async function () {
     resetColorForm();
+    logoFormApplyData();
   };
   addPageEventListeners();
   resetColorForm();
@@ -25,11 +26,13 @@ export function addPageEventListeners(): void {
     colorIris.addEventListener(`change`, saveColorBtnOnHandler);
     colorSaveBtn.addEventListener(`click`, saveColorsHandler);
     const {
+      logoSaveBtn,
       logoFile,
       logoRmvFile
     } = getLogoPointers();
     logoFile.addEventListener(`click`, uploadDisplayLogoHandler);
     logoRmvFile.addEventListener(`click`, removeLogoHandler);
+    logoSaveBtn.addEventListener(`click`, saveLogoHandler);
   } catch (err) {
     console.log(`Cannot add page listeners: ${err.message}`);
   }

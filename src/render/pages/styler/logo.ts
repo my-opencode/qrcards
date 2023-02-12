@@ -1,3 +1,4 @@
+import { IApplicationDataStyle } from "../../../types";
 import { disableBtn } from "./index.js";
 export interface IDocLogoPointers {
   logoSaveBtn: HTMLElement,
@@ -136,7 +137,7 @@ export async function logoFormApplyData(): Promise<void> {
   const { logo, logoHeight, logoWidth } = appData.style;
   await displayLogo(logo, logoWidth, logoHeight);
 }
-export function removeLogo() {
+export function removeLogo(): void {
   const { logoPreview,
     logoSaveBtn,
     logoUrl
@@ -146,6 +147,36 @@ export function removeLogo() {
   disableBtn(logoSaveBtn, false);
   logoUrl.value = ``;
 }
-export function removeLogoHandler(event:Event){
+export function removeLogoHandler(event: Event): void {
   removeLogo();
+}
+
+export function readLogoForm(): IApplicationDataStyle {
+  const {
+    logoUrl,
+    logoPreview
+  } = getLogoPointers();
+  const style: IApplicationDataStyle = {};
+  style.logo = logoUrl.value || ``;
+  if (style.logo) {
+    const canvas = logoPreview.querySelector(`canvas`);
+    style.logoWidth = canvas.width;
+    style.logoHeight = canvas.height;
+  }
+  return style;
+}
+
+export async function saveLogoHandler(event: Event): Promise<void> {
+  const {
+    logoSaveBtn
+  } = getLogoPointers();
+
+  const style = readLogoForm();
+
+  if(style.logo)
+    await window.dataapi.setappdata({ style });
+  else 
+    await window.dataapi.styleremovelogo();
+  window.userMessage(`Logo saved`);
+  disableBtn(logoSaveBtn, true);
 }
