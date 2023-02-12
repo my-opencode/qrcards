@@ -1,4 +1,4 @@
-import * as QRCode from "qrcode";
+import QRCode from "qrcode";
 import { applicationData } from "../applicationData";
 
 export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number, width: number } {
@@ -32,13 +32,17 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
         }
         rowi++;
     }
+    svg = addLogo(svg,width,height);
     // return values
-    // console.log({ svg, height, width });
     return { svg, height, width };
 }
 
 export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOptions): ReturnType<typeof qrobjToSvg> {
     console.log(`create qr code for`, data);
+    if (applicationData.style.logo) {
+        if (!o) o = {};
+        o.errorCorrectionLevel = `Q`;
+    }
     const qrobj = QRCode.create(data, o);
     const { svg, height, width } = qrobjToSvg(qrobj);
     return {
@@ -92,6 +96,7 @@ function isEyeDot(coli: number, rowi: number, size: number): boolean {
     if (rowi === max && coli > 0 && coli < 6)
         return true;
 }
+
 function isIrisDot(coli: number, rowi: number, size: number): boolean {
     const max = size - 1;
     // top left eye
@@ -115,4 +120,16 @@ function isIrisDot(coli: number, rowi: number, size: number): boolean {
         return true;
     if (coli === 4 && rowi >= max - 4 && rowi <= max - 2)
         return true;
+}
+const logoMaxQrlength = 5;
+function addLogo (svg:string,width:number,height:number){
+    if (applicationData.style.logo) {
+        const {logoWidth,logoHeight,logo} = applicationData.style;
+        const _width = logoWidth > logoHeight ? Math.round(width / logoMaxQrlength) : logoWidth/logoHeight*(Math.round(height / logoMaxQrlength));
+        const _height = logoHeight > logoWidth ? Math.round(height / logoMaxQrlength) : logoHeight/logoWidth*(Math.round(width / logoMaxQrlength));
+        svg +=`<g>
+        <image x="${Math.round((width - _width) / 2)}" y="${Math.round((height - _height) / 2)}" width="${_width}" height="${_height}" href="${logo}" />
+    </g>`;
+    }
+    return svg;
 }
