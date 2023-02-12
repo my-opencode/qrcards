@@ -1,0 +1,29 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  grid-auto-rows: minmax(80px, auto);
+}
+
+#qrdata,
+#vcarddata {
+  grid-column: 1;
+  grid-row: 1/3
+}
+
+#qrgenbtn {
+  grid-column: 1;
+  grid-row: 3
+}
+
+#qrdisplaycontainer {
+  grid-column: 2;
+  grid-row: 1/3;
+  align-self: center;
+  justify-self: center;
+}
+
+#qrdldbtn {
+  grid-column: 2;
+  grid-row: 3
+}

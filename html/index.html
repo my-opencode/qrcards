@@ -1,197 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="shared-flex.css" />
+    <link rel="stylesheet" href="shared-grid.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' blob: data:; script-src 'self' 'unsafe-inline'"
+    />
+    <title>QrCards</title>
+  </head>
 
-<head>
-  <style>
-    body {
-      margin: 25px;
-    }
+  <body>
+    <!-- <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
+    <button class="nav-link" data-page="vcard">Vcard Qr Code</button>
+    <button class="nav-link" data-page="vcards">Batch Qr Vcards</button>
+    <button class="nav-link" data-page="styler">Qr Style</button> -->
+    <div id="contents">Select an action to do.</div>
 
-    .centered-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-
-    }
-
-    .txt-center {
-      text-align: center;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
-      grid-auto-rows: minmax(80px, auto);
-    }
-
-    #qrdata,
-    #vcarddata {
-      grid-column: 1;
-      grid-row: 1/3
-    }
-
-    #qrgenbtn {
-      grid-column: 1;
-      grid-row: 3
-    }
-
-    #qrdisplaycontainer {
-      grid-column: 2;
-      grid-row: 1/3;
-      align-self: center;
-      justify-self: center;
-    }
-
-    #qrdldbtn {
-      grid-column: 2;
-      grid-row: 3
-    }
-
-    .no-display {
-      display: none;
-    }
-
-    .user-message {
-      position: fixed;
-      left: 2px;
-      top: 2px;
-      border: 2px red solid;
-      padding: 2px;
-      z-index: 999;
-      background: white;
-    }
-  </style>
-  <!-- <link rel="import" href="../html/pages/qr-simple.html" data-page="plaintext" />
-  <link rel="import" href="../html/pages/qr-vcard.html" data-page="vcard" /> -->
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' blob: data:; script-src 'self' 'unsafe-inline'">
-  <title>QrCards</title>
-</head>
-
-<body>
-  <button class="nav-link" data-page="plaintext">Plaintext Qr Code</button>
-  <button class="nav-link" data-page="vcard">Vcard Qr Code</button>
-  <button class="nav-link" data-page="vcards">Batch Qr Vcards</button>
-  <div id="contents">
-    Select an action to do.
-  </div>
-
-  <template id="template-plaintext">
-    <div class="centered-container">
-      <h1 class="txt-center">Qr Code form</h1>
-      <div class="grid-container">
-        <textarea name="qrdata" id="qrdata" cols="30" rows="10" autofocus></textarea>
-        <button name="qrgenbtn" id="qrgenbtn">Generate Qr Code</button>
-        <svg xmlns="http://www.w3.org/2000/svg" id="qrdisplaycontainer" height="200" width="200">
-          <defs>
-            <rect id="dot" width="10" height="10" fill="black"></rect>
-          </defs>
-          <g id="qrdisplay"></g>
-        </svg>
-        <button name="qrdldbtn" id="qrdldbtn" disabled>Download Qr Code</button>
-        <a name="qrdldlink" id="qrdldlink" href="#" class="no-display"></a>
+    <template id="template-plaintext">
+      <div class="centered-container">
+        <h1 class="txt-center">Qr Code form</h1>
+        <div class="grid-container">
+          <textarea
+            name="qrdata"
+            id="qrdata"
+            cols="30"
+            rows="10"
+            autofocus
+          ></textarea>
+          <button name="qrgenbtn" id="qrgenbtn">Generate Qr Code</button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            id="qrdisplaycontainer"
+            height="200"
+            width="200"
+          >
+            <defs>
+              <rect id="dot" width="10" height="10"></rect>
+            </defs>
+            <g id="qrdisplay"></g>
+          </svg>
+          <button name="qrdldbtn" id="qrdldbtn" disabled>
+            Download Qr Code
+          </button>
+          <a name="qrdldlink" id="qrdldlink" href="#" class="no-display"></a>
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
 
-  <template id="template-vcard">
-    <div class="centered-container">
-      <h1 class="txt-center">Qr Vcard form</h1>
-      <div class="grid-container">
-        <div id="vcarddata">
+    <template id="template-vcard">
+      <div class="centered-container">
+        <h1 class="txt-center">Qr Vcard form</h1>
+        <div class="grid-container">
+          <div id="vcarddata">
+            <table>
+              <tr>
+                <td><label for="prefix">Prefix:</label></td>
+                <td><input type="text" name="prefix" id="vc-prefix" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="surname">Surname 性:</label></td>
+                <td>
+                  <input
+                    type="text"
+                    name="surname"
+                    id="vc-surname"
+                    autofocus="autofocus"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="names">Names 名:</label></td>
+                <td><input type="text" name="names" id="vc-names" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="suffix">Suffix:</label></td>
+                <td><input type="text" name="suffix" id="vc-suffix" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="fullname">Fullname:</label></td>
+                <td><input type="text" name="fullname" id="vc-fullname" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="title">Title:</label></td>
+                <td><input type="text" name="title" id="vc-title" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="bdate">Birth Date:</label></td>
+                <td><input type="text" name="bdate" id="vc-bdate" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="email">E-Mail:</label></td>
+                <td><input type="text" name="email" id="vc-email" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="phonework">Work Phone:</label></td>
+                <td>
+                  <input type="text" name="phonework" id="vc-phonework" />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="phonemobile">Work Mobile:</label></td>
+                <td>
+                  <input type="text" name="phonemobile" id="vc-phonemobile" />
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="phonemobilepersonal">Personal Mobile:</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="phonemobilepersonal"
+                    id="vc-phonemobilepersonal"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="company">Company:</label></td>
+                <td><input type="text" name="company" id="vc-company" /></td>
+              </tr>
+
+              <tr>
+                <td><label for="websitework">Company website:</label></td>
+                <td>
+                  <input type="text" name="websitework" id="vc-websitework" />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="addressdetails">Address detail:</label></td>
+                <td>
+                  <input
+                    type="text"
+                    name="addressdetails"
+                    id="vc-addressdetails"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label for="addresslocalitycity">Locality, City:</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="addresslocalitycity"
+                    id="vc-addresslocalitycity"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="addressregion">Region:</label></td>
+                <td>
+                  <input
+                    type="text"
+                    name="addressregion"
+                    id="vc-addressregion"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="addresszip">Postal Code:</label></td>
+                <td>
+                  <input type="text" name="addresszip" id="vc-addresszip" />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="addresscountry">Country:</label></td>
+                <td>
+                  <input
+                    type="text"
+                    name="addresscountry"
+                    id="vc-addresscountry"
+                  />
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="timezone">Time Zone:</label></td>
+                <td><input type="text" name="timezone" id="vc-timezone" /></td>
+              </tr>
+            </table>
+          </div>
+          <button name="vcardqrgenbtn" id="vcardqrgenbtn">
+            Generate Vcard Qr Code
+          </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            id="qrdisplaycontainer"
+            height="200"
+            width="200"
+          >
+            <defs>
+              <rect id="dot" width="10" height="10"></rect>
+            </defs>
+            <g id="qrdisplay"></g>
+          </svg>
+          <button name="qrdldbtn" id="qrdldbtn" disabled>
+            Download Qr Code
+          </button>
+          <a name="qrdldlink" id="qrdldlink" href="#" class="no-display"></a>
+        </div>
+      </div>
+    </template>
+
+    <template id="template-vcards">
+      <div class="centered-container">
+        <h1 class="txt-center">Batch Qr Vcards</h1>
+        <button name="vcardsdataloadbtn" id="vcardsdataloadbtn">
+          Open Vcards data
+        </button>
+        <button name="vcardsdatadownloadbtn" id="vcardsdatadownloadbtn">
+          Download Vcards data
+        </button>
+
+        <details>
+          <summary>Company Contact</summary>
           <table>
             <tr>
-              <td><label for="prefix">Prefix:</label></td>
-              <td><input type="text" name="prefix" id="vc-prefix" /></td>
+              <td><label for="company">Company Name:</label></td>
+              <td><input type="text" name="company" id="vc-company" /></td>
             </tr>
 
             <tr>
-              <td><label for="surname">Surname 性:</label></td>
-              <td><input type="text" name="surname" id="vc-surname" autofocus="autofocus" /></td>
-            </tr>
+              <td><label for="addressdetails">Address detail:</label></td>
+              <td>
+                <input
+                  type="text"
+                  name="addressdetails"
+                  id="vc-addressdetails"
+                />
+              </td>
 
-            <tr>
-              <td><label for="names">Names 名:</label></td>
-              <td><input type="text" name="names" id="vc-names" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="suffix">Suffix:</label></td>
-              <td><input type="text" name="suffix" id="vc-suffix" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="fullname">Fullname:</label></td>
-              <td><input type="text" name="fullname" id="vc-fullname" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="title">Title:</label></td>
-              <td><input type="text" name="title" id="vc-title" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="bdate">Birth Date:</label></td>
-              <td><input type="text" name="bdate" id="vc-bdate" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="email">E-Mail:</label></td>
-              <td><input type="text" name="email" id="vc-email" /></td>
-            </tr>
-
-            <tr>
               <td><label for="phonework">Work Phone:</label></td>
               <td><input type="text" name="phonework" id="vc-phonework" /></td>
             </tr>
 
             <tr>
-              <td><label for="phonemobile">Work Mobile:</label></td>
-              <td><input type="text" name="phonemobile" id="vc-phonemobile" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="phonemobilepersonal">Personal Mobile:</label></td>
-              <td><input type="text" name="phonemobilepersonal" id="vc-phonemobilepersonal" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="company">Company:</label></td>
-              <td><input type="text" name="company" id="vc-company" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="websitework">Company website:</label></td>
-              <td><input type="text" name="websitework" id="vc-websitework" /></td>
-            </tr>
-
-            <tr>
-              <td><label for="addressdetails">Address detail:</label></td>
-              <td><input type="text" name="addressdetails" id="vc-addressdetails" /></td>
-            </tr>
-
-            <tr>
               <td><label for="addresslocalitycity">Locality, City:</label></td>
-              <td><input type="text" name="addresslocalitycity" id="vc-addresslocalitycity" /></td>
+              <td>
+                <input
+                  type="text"
+                  name="addresslocalitycity"
+                  id="vc-addresslocalitycity"
+                />
+              </td>
+
+              <td><label for="phonemobile">Work Mobile:</label></td>
+              <td>
+                <input type="text" name="phonemobile" id="vc-phonemobile" />
+              </td>
             </tr>
 
             <tr>
               <td><label for="addressregion">Region:</label></td>
-              <td><input type="text" name="addressregion" id="vc-addressregion" /></td>
+              <td>
+                <input type="text" name="addressregion" id="vc-addressregion" />
+              </td>
+
+              <td><label for="websitework">Company website:</label></td>
+              <td>
+                <input type="text" name="websitework" id="vc-websitework" />
+              </td>
             </tr>
 
             <tr>
               <td><label for="addresszip">Postal Code:</label></td>
-              <td><input type="text" name="addresszip" id="vc-addresszip" /></td>
+              <td>
+                <input type="text" name="addresszip" id="vc-addresszip" />
+              </td>
             </tr>
 
             <tr>
               <td><label for="addresscountry">Country:</label></td>
-              <td><input type="text" name="addresscountry" id="vc-addresscountry" /></td>
+              <td>
+                <input
+                  type="text"
+                  name="addresscountry"
+                  id="vc-addresscountry"
+                />
+              </td>
             </tr>
 
             <tr>
@@ -199,105 +308,203 @@
               <td><input type="text" name="timezone" id="vc-timezone" /></td>
             </tr>
           </table>
-        </div>
-        <button name="vcardqrgenbtn" id="vcardqrgenbtn">Generate Vcard Qr Code</button>
-        <svg xmlns="http://www.w3.org/2000/svg" id="qrdisplaycontainer" height="200" width="200">
-          <defs>
-            <rect id="dot" width="10" height="10" fill="black"></rect>
-          </defs>
-          <g id="qrdisplay"></g>
-        </svg>
-        <button name="qrdldbtn" id="qrdldbtn" disabled>Download Qr Code</button>
-        <a name="qrdldlink" id="qrdldlink" href="#" class="no-display"></a>
+        </details>
+
+        <details>
+          <summary>Employees</summary>
+          <button id="vcards-add-data-row-btn">Add row</button>
+          <table id="vcards-employee-data">
+            <thead>
+              <td>
+                <input type="checkbox" name="vcardsall" id="vcardsall" /> Select
+              </td>
+              <td>Prefix:</td>
+              <td>Surname 性:</td>
+              <td>Names 名:</td>
+              <td>Suffix:</td>
+              <td>Fullname:</td>
+              <td>Title:</td>
+              <td>Birth Date:</td>
+              <td>E-Mail:</td>
+              <td>Work Phone:</td>
+              <td>Work Mobile:</td>
+              <td>Personal Mobile:</td>
+              <td>Actions</td>
+            </thead>
+          </table>
+        </details>
+
+        <button name="vcardsgenbtn" id="vcardsgenbtn">Generate Vcards</button>
+        <button name="vcardsdldbtn" id="vcardsdldbtn" disabled>
+          Download Vcards
+        </button>
+        <a name="zipdldlink" id="zipdldlink" href="#" class="no-display"></a>
       </div>
-    </div>
-  </template>
+    </template>
 
-  <template id="template-vcards">
-    <div class="centered-container">
-      <h1 class="txt-center">Batch Qr Vcards</h1>
-      <button name="vcardsdataloadbtn" id="vcardsdataloadbtn">Open Vcards data</button>
-      <button name="vcardsdatadownloadbtn" id="vcardsdatadownloadbtn">Download Vcards data</button>
+    <template id="template-styler">
+      <div class="centered-container">
+        <h1 class="txt-center">Qr Style</h1>
+        <!-- Colors -->
+        <details open>
+          <summary>
+            Colors
+            <button id="qrstylecolorsavebtn" disabled>Save changes</button>
+          </summary>
+          <input
+            type="color"
+            name="qrstyledotcolor"
+            id="qrstyledotcolor"
+            value="#000000"
+          />
+          <label for="qrstyledotcolor">Color of the dots</label>
+          <br />
+          <input
+            type="color"
+            name="qrstylebgcolor"
+            id="qrstylebgcolor"
+            value="#FFFFFF"
+          />
+          <label for="qrstylebgcolor">Color of the background</label>
+          <br />
+          <input
+            type="checkbox"
+            name="qrstylecheckeyecolor"
+            id="qrstylecheckeyecolor"
+          />
+          <label for="qrstylecheckeyecolor"
+            >Different colors for the eyes</label
+          >
+          <br />
+          <div id="additional-colors">
+            <input
+              type="color"
+              name="qrstyleeyecolor"
+              id="qrstyleeyecolor"
+              value="#000000"
+            />
+            <label for="qrstyleeyecolor">Eye Color</label>
+            <br />
+            <input
+              type="color"
+              name="qrstyleiriscolor"
+              id="qrstyleiriscolor"
+              value="#000000"
+            />
+            <label for="qrstyleiriscolor">Eye Iris Color</label>
+          </div>
+        </details>
+        <!-- Logo -->
+        <details>
+          <summary>
+            Logo
+            <button id="qrstylelogosavebtn" disabled>Save changes</button>
+          </summary>
 
-      <details>
-        <summary>Company Contact</summary>
-        <table>
-          <tr>
-            <td><label for="company">Company Name:</label></td>
-            <td><input type="text" name="company" id="vc-company" /></td>
-          </tr>
+          <div id="qrstylelogopreview" class="placeholder"></div>
+          <input type="hidden" name="qrstylelogourl" id="qrstylelogourl" />
+          <button name="qrstylelogo" id="qrstylelogo">Upload Logo</button>
+          <button name="qrstylelogoremove" id="qrstylelogoremove">Remove Logo</button>
+        </details>
+        <details>
+          <summary>
+            <span class="txt-warning">[Coming Soon]</span> Design
+            <button id="qrstyledesignsavebtn" disabled>Save changes</button>
+          </summary>
+          <!-- Dots -->
+          <h3>Dot Style</h3>
+          <div class="qrstyledotstyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="dotstyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
+              </div>
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="dotstyle"
+                value="abc"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style abc</span>
+              </div>
+            </label> -->
+          </div>
+          <!-- Eyes -->
+          <h3>Eye Style</h3>
+          <div class="qrstyleeyestyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="eyestyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
+              </div>
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="eyestyle"
+                value="efg"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style EFG</span>
+              </div>
+            </label> -->
+          </div>
+          <!-- Iriss -->
+          <h3>Iris Style</h3>
+          <div class="qrstyleirisstyleselect radio-sprites">
+            <label>
+              <input
+                type="radio"
+                name="irisstyle"
+                value="default"
+                class="no-display"
+                checked="checked"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Default</span>
+              </div>
+            </label>
+            <!-- <label>
+              <input
+                type="radio"
+                name="irisstyle"
+                value="hij"
+                class="no-display"
+              />
+              <div class="radio-selector">
+                <div class="sprite-preview"></div>
+                <span class="txt-center">Style HIJ</span>
+              </div>
+            </label> -->
+          </div>
+        </details>
+      </div>
+    </template>
 
-          <tr>
-            <td><label for="addressdetails">Address detail:</label></td>
-            <td><input type="text" name="addressdetails" id="vc-addressdetails" /></td>
-
-            <td><label for="phonework">Work Phone:</label></td>
-            <td><input type="text" name="phonework" id="vc-phonework" /></td>
-          </tr>
-
-          <tr>
-            <td><label for="addresslocalitycity">Locality, City:</label></td>
-            <td><input type="text" name="addresslocalitycity" id="vc-addresslocalitycity" /></td>
-
-            <td><label for="phonemobile">Work Mobile:</label></td>
-            <td><input type="text" name="phonemobile" id="vc-phonemobile" /></td>
-          </tr>
-
-          <tr>
-            <td><label for="addressregion">Region:</label></td>
-            <td><input type="text" name="addressregion" id="vc-addressregion" /></td>
-
-            <td><label for="websitework">Company website:</label></td>
-            <td><input type="text" name="websitework" id="vc-websitework" /></td>
-          </tr>
-
-          <tr>
-            <td><label for="addresszip">Postal Code:</label></td>
-            <td><input type="text" name="addresszip" id="vc-addresszip" /></td>
-          </tr>
-
-          <tr>
-            <td><label for="addresscountry">Country:</label></td>
-            <td><input type="text" name="addresscountry" id="vc-addresscountry" /></td>
-          </tr>
-
-          <tr>
-            <td><label for="timezone">Time Zone:</label></td>
-            <td><input type="text" name="timezone" id="vc-timezone" /></td>
-          </tr>
-        </table>
-      </details>
-
-      <details>
-        <summary>Employees</summary>
-        <button id="vcards-add-data-row-btn">Add row</button>
-        <table id="vcards-employee-data">
-          <thead>
-            <td><input type="checkbox" name="vcardsall" id="vcardsall"> Select</td>
-            <td>Prefix:</td>
-            <td>Surname 性:</td>
-            <td>Names 名:</td>
-            <td>Suffix:</td>
-            <td>Fullname:</td>
-            <td>Title:</td>
-            <td>Birth Date:</td>
-            <td>E-Mail:</td>
-            <td>Work Phone:</td>
-            <td>Work Mobile:</td>
-            <td>Personal Mobile:</td>
-            <td>Actions</td>
-          </thead>
-        </table>
-      </details>
-
-      <button name="vcardsgenbtn" id="vcardsgenbtn">Generate Vcards</button>
-      <button name="vcardsdldbtn" id="vcardsdldbtn" disabled>Download Vcards</button>
-      <a name="zipdldlink" id="zipdldlink" href="#" class="no-display"></a>
-    </div>
-  </template>
-
-  <script>if (!exports) var exports = {};</script>
-  <script src="../dist/renderer.js"></script>
-</body>
-
+    <script>
+      if (!exports) var exports = {};
+    </script>
+    <script type="module" src="./js/renderer.js"></script>
+  </body>
 </html>

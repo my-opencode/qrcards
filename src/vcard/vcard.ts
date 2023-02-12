@@ -1,4 +1,4 @@
-import { IVcardForm } from "./types";
+import { IVcardForm } from "../types";
 
 export function formToVcard(formObj: IVcardForm): string {
     const vcard = `BEGIN:VCARD
@@ -18,4 +18,10 @@ ADR;type=WORK:${formObj.addressdetails};${formObj.addresslocalitycity || ``};${f
 END:VCARD`;
 
     return vcard;
+}
+
+export function vcardHandler (event:Event, formObj: IVcardForm):string {
+  console.log(`build vcard`);
+  const vcard = formToVcard(formObj);
+  return vcard;
 }

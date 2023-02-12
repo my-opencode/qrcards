@@ -1,46 +1,82 @@
 /* eslint-disable no-var */
 import { QRCodeOptions } from "qrcode";
 
+export type PageNames = "plaintext" | "vcard" | "vcards" | "styler";
+
 export interface IImgFileDesc {
     filename: string;
     data: string
 }
-export interface IVcardForm {
+export interface IVcardCompanyForm {
     timezone?: string;
-    bday?: string;
-    email?: string;
     phonework?: string;
     phonemobile?: string;
-    phonemobilepersonal?: string;
     websitework?: string;
     company?: string;
-    surname: string;
-    names: string;
-    prefix?: string;
-    suffix?: string;
-    fullname: string;
     addressdetails?: string;
     addresslocalitycity?: string;
     addressregion?: string;
     addresszip?: string;
     addresscountry?: string;
+}
+export interface IVcardEmployeeForm {
+    bday?: string;
+    email?: string;
+    phonework?: string;
+    phonemobile?: string;
+    phonemobilepersonal?: string;
+    surname: string;
+    names: string;
+    prefix?: string;
+    suffix?: string;
+    fullname: string;
     title?: string;
 }
-export interface IApplicationData{
-    style: {[key:string]:string};
-    company: {[key:string]:string};
-    employee_data: {[key:string]:string}[];
-    company_form_fields: string[];
-    employee_form_fields: string[];
-    vcard_required_fields: string[];
+export type IVcardForm = IVcardCompanyForm & IVcardEmployeeForm;
+
+export interface IApplicationDataStyle {
+    colorBg?: string;
+    colorDot?: string;
+    colorEye?: string;
+    colorIris?: string;
+    spritesDots?: string;
+    spritesEyes?: string;
+    spritesIriss?: string;
+    logo?: string;
+    logoHeight?: number;
+    logoWidth?: number;
 }
-export interface IApplicationDataUpdate{
-    style?: {[key:string]:string};
-    company?: {[key:string]:string};
-    employee_data?: {[key:string]:string}[];
-    company_form_fields?: string[];
-    employee_form_fields?: string[];
-    vcard_required_fields?: string[];
+
+export interface IApplicationData {
+    style: IApplicationDataStyle;
+    company: IVcardCompanyForm;
+    employee_data: IVcardEmployeeForm[];
+    company_form_fields: (keyof IVcardCompanyForm)[];
+    employee_form_fields: (keyof IVcardEmployeeForm)[];
+    vcard_required_fields: (keyof IVcardForm)[];
+}
+
+export interface IApplicationDataUpdate {
+    style?: IApplicationDataStyle;
+    company?: IVcardCompanyForm;
+    employee_data?: IVcardEmployeeForm[];
+    company_form_fields?: (keyof IVcardCompanyForm)[];
+    employee_form_fields?: (keyof IVcardEmployeeForm)[];
+    vcard_required_fields?: (keyof IVcardForm)[];
+}
+
+export interface IApplicationState {
+    pageName: string
+}
+export interface IDocPointers {
+    [key: string]: Element | HTMLElement | SVGAElement | HTMLInputElement | HTMLAnchorElement
+}
+
+export interface IUploadedImage {
+    buffer: Buffer;
+    width: number;
+    height: number;
+    name: string;
 }
 
 declare global {
@@ -58,8 +94,20 @@ declare global {
         dataapi: {
             loaddata(): Promise<void>;
             getappdata(): Promise<IApplicationData>;
-            setappdata(data:IApplicationDataUpdate): Promise<void>;
+            setappdata(data: IApplicationDataUpdate): Promise<void>;
             saveappdata(): Promise<void>;
+            handleMenuAppDataLoaded(callback: () => void): void;
+            handleMenuAppDataSave(callback: () => void): void;
+            styleremovelogo():Promise<void>;
         };
+        pageapi: {
+            pageChanged: (pageName: string) => void,
+            handleGoTo(callback: (eventPhantom: Event, pageName: string) => void): void
+        };
+        imageapi: {
+            uploadimage: () => Promise<IUploadedImage>,
+        };
+        applyData(): Promise<void>;
+        userMessage(txt: string): void;
     }
 }

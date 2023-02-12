@@ -1,0 +1,63 @@
+body {
+  margin: 25px;
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.no-display {
+  display: none;
+}
+
+.user-message {
+  position: fixed;
+  left: 2px;
+  top: 2px;
+  border: 2px red solid;
+  padding: 2px;
+  z-index: 999;
+  background: white;
+}
+
+#qrstylelogopreview.placeholder {
+  width: 150px;
+  height: 150px;
+  border: gray 1px solid;
+  background-color: lightgray;
+}
+
+.radio-sprites .radio-selector .sprite-preview {
+  width: 60px;
+  height: 60px;
+  margin-left: 5px;
+  border: gray 1px solid;
+  background-color: lightgray;
+}
+
+.sprite-preview {
+  margin: 4px;
+}
+
+.radio-sprites [type=radio]:checked~.radio-selector .sprite-preview {
+  border: 5px blue solid;
+  margin: 0;
+}
+
+summary {
+  margin-top: 40px;
+  font-size: larger;
+  margin-bottom: 10px;
+}
+
+#additional-colors {
+  display: none;
+}
+
+#qrstylecheckeyecolor:checked~#additional-colors {
+  display: block;
+}
+
+.txt-warning {
+  color: red!important;
+}
