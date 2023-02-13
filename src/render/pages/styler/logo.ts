@@ -51,11 +51,23 @@ async function displayLogo(dataUrl?: string, width?: number, height?: number, na
     logoUrl
   } = getLogoPointers();
   const appData = await window.dataapi.getappdata();
-  if (!dataUrl) dataUrl = appData.style.logo;
-  if (!dataUrl) return;
+  let _dataUrl = dataUrl || ``;
+  if (!_dataUrl) _dataUrl = appData.style.logo || ``;
+  if (!_dataUrl) return;
 
-  if (!width) width = appData.style.logoWidth;
-  if (!height) height = appData.style.logoHeight;
+  let _width = width || 0;
+  if (!_width) _width = appData.style.logoWidth || 0;
+  if (!_width) {
+    window.userMessage(`Invalid configuration, missing logo width.`);
+    return;
+  }
+
+  let _height = height || 0;
+  if (!_height) _height = appData.style.logoHeight || 0;
+  if (!_height) {
+    window.userMessage(`Invalid configuration, missing logo height.`);
+    return;
+  }
 
   const canvas = document.createElement(`canvas`);
   logoPreview.innerHTML = ``;
@@ -68,13 +80,13 @@ async function displayLogo(dataUrl?: string, width?: number, height?: number, na
     img.onload = function () {
       console.log(`image loaded`);
       // draw on canvas
-      resizeDraw(canvas, img, width, height);
+      resizeDraw(canvas, img, _width, _height);
       console.log(`canvas drawn`);
       logoUrl.value = canvas.toDataURL();
       r();
     };
     // init image
-    img.src = dataUrl;
+    img.src = _dataUrl;
   });
 }
 
@@ -109,34 +121,37 @@ function resizeDrawHeight(canvas: HTMLCanvasElement, img: HTMLImageElement, widt
   canvas.width = _width;
   canvas.height = MAX_LOGO_HEIGHT;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, _width, MAX_LOGO_HEIGHT);
+  ctx?.drawImage?.(img, 0, 0, _width, MAX_LOGO_HEIGHT);
 }
+
 function resizeDrawWidth(canvas: HTMLCanvasElement, img: HTMLImageElement, width: number, height: number) {
   const _height = MAX_LOGO_WIDTH * (height / width);
   canvas.width = MAX_LOGO_WIDTH;
   canvas.height = _height;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, MAX_LOGO_WIDTH, _height);
+  ctx?.drawImage?.(img, 0, 0, MAX_LOGO_WIDTH, _height);
 }
-function resizeDraw(canvas: HTMLCanvasElement, img: HTMLImageElement, width: number, height: number) {
 
+function resizeDraw(canvas: HTMLCanvasElement, img: HTMLImageElement, width: number, height: number) {
   if (width <= MAX_LOGO_WIDTH && height <= MAX_LOGO_HEIGHT) {
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, width, height);
+    ctx?.drawImage?.(img, 0, 0, width, height);
   } else if (width > MAX_LOGO_WIDTH && height > MAX_LOGO_HEIGHT)
     if (width > height)
       resizeDrawWidth(canvas, img, width, height);
     else
       resizeDrawHeight(canvas, img, width, height);
 }
+
 export async function logoFormApplyData(): Promise<void> {
   const appData = await window.dataapi.getappdata();
   if (!appData.style.logo) return;
   const { logo, logoHeight, logoWidth } = appData.style;
   await displayLogo(logo, logoWidth, logoHeight);
 }
+
 export function removeLogo(): void {
   const { logoPreview,
     logoSaveBtn,
@@ -160,8 +175,8 @@ export function readLogoForm(): IApplicationDataStyle {
   style.logo = logoUrl.value || ``;
   if (style.logo) {
     const canvas = logoPreview.querySelector(`canvas`);
-    style.logoWidth = canvas.width;
-    style.logoHeight = canvas.height;
+    style.logoWidth = canvas?.width;
+    style.logoHeight = canvas?.height;
   }
   return style;
 }

@@ -38,7 +38,7 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `Square (default)`,
+  `Circle`,
   definitions,
   useIds
 );

@@ -60,8 +60,10 @@ export async function resetColorForm(): Promise<void> {
 
   if (appData.style?.colorEye || appData.style?.colorIris) {
     colorEyeIrisOn.setAttribute(`checked`, `checked`);
-    colorEye.setAttribute(`value`, appData.style?.colorEye);
-    colorIris.setAttribute(`value`, appData.style?.colorIris);
+    if (appData.style?.colorEye)
+    colorEye.setAttribute(`value`, appData.style.colorEye);
+    if (appData.style?.colorIris)
+    colorIris.setAttribute(`value`, appData.style.colorIris);
   }
 }
 export async function saveColorsHandler(event: Event): Promise<void> {
