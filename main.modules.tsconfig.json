@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "Node16",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "lib": ["DOM"]
+  },
+  "include": [ 
+    "src/image",
+    "src/qr",
+    "src/sprites",
+    "src/vcard",
+    "src/zip",
+    "src/*.ts"
+],
+  "exclude": ["src/render"]
+}

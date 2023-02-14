@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "moduleResolution":"node",
-    "target":"ES2021",
+    "moduleResolution": "node",
+    "target": "ES2021",
     "noImplicitAny": true,
     "sourceMap": true,
     "outDir": "html/js",
     "baseUrl": ".",
-    "lib":["DOM"],
+    "lib": ["DOM"],
     "paths": {
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/render","src/types.d.ts"],
-  "files": ["src/types.d.ts"]
+  "include": [
+    "src/render",
+    "src/types.d.ts"
+  ]
 }
