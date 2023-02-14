@@ -21,9 +21,13 @@ export function getSpritesPointers(): IDocSpritePointers {
   const spritesRadiosDots = document.querySelectorAll(`#contents input[name="dotstyle"]`) as NodeListOf<HTMLInputElement>;
   const spritesRadiosEyes = document.querySelectorAll(`#contents input[name="eyestyle"]`) as NodeListOf<HTMLInputElement>;
   const spritesRadiosIrises = document.querySelectorAll(`#contents input[name="irisstyle"]`) as NodeListOf<HTMLInputElement>;
-  const spritesDots = document.querySelector(`#contents input[name="dotstyle"][checked="checked"]`) as HTMLInputElement;
-  const spritesEyes = document.querySelector(`#contents input[name="eyestyle"][checked="checked"]`) as HTMLInputElement;
-  const spritesIrises = document.querySelector(`#contents input[name="irisstyle"][checked="checked"]`) as HTMLInputElement;
+  // const spritesDots = document.querySelector(`#contents input[name="dotstyle"][checked="checked"]`) as HTMLInputElement;
+  // const spritesEyes = document.querySelector(`#contents input[name="eyestyle"][checked="checked"]`) as HTMLInputElement;
+  // const spritesIrises = document.querySelector(`#contents input[name="irisstyle"][checked="checked"]`) as HTMLInputElement;
+  // clicking on the label does update the checked property but not the DOM attribute checked for some reason
+  const spritesDots = Array.from(spritesRadiosDots).find(e => e.checked) as HTMLInputElement;
+  const spritesEyes = Array.from(spritesRadiosEyes).find(e => e.checked) as HTMLInputElement;
+  const spritesIrises = Array.from(spritesRadiosIrises).find(e => e.checked) as HTMLInputElement;
   return {
     spritesSaveBtn,
     spritesDotsWrapper,
