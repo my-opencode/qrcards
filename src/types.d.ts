@@ -79,23 +79,6 @@ export interface IUploadedImage {
     name: string;
 }
 
-// interface IStrObj { [key: string]: string }
-// declare class Sprites {
-//     displayName: string;
-//     definitions: string;
-//     useIds: IStrObj;
-//     defaultClass: string;
-//     use(id: keyof typeof this.useIds, x: number, y: number, classes: string):string
-// }
-// declare class DotSprites extends Sprites {
-//   category: "dot"
-// }
-// declare class EyeSprites extends Sprites {
-//   category: "eye"
-// }
-// declare class IrisSprites extends Sprites {
-//   category: "iris"
-// }
 export interface ISpriteListItem {
     id: string,
     displayName: string
