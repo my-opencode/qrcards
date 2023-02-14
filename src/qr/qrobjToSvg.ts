@@ -1,25 +1,22 @@
-import QRCode from "qrcode";
+import * as QRCode from "qrcode";
 import { applicationData } from "../applicationData";
 import { dotsprites, eyesprites, irissprites } from "../sprites/index";
-type DataArray = (1 | 0 | true | false)[][];
+type DataArray = (1 | 0)[][];
+type Offsetter = (n: number) => number;
 
 export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number, width: number } {
     // known constants
     const dotSize = 10;
     const marginSize = 2 * dotSize;
-    const spritesOn = applicationData.style.spritesDots || applicationData.style.spritesEyes || applicationData.style.spritesIrises;
     // qrcode data & size
-    const { dataArr, size } = bufferToDataArr(qrcode);
-    let data = [...qrcode.modules.data];
-    const w = data.length / size;
+    const { dataArr, size, w } = bufferToDataArr(qrcode);
     // height & width
     const width = 2 * marginSize + w * dotSize;
     const height = width; // + text height;
     // offsetters
     const x = (coli: number) => marginSize + (coli * dotSize);
     const y = (rowi: number) => marginSize + (rowi * dotSize);
-    // build svg html
-    // bg
+    // open svg
     let svg = `<svg
     xmlns="http://www.w3.org/2000/svg"
     id="qrdisplaycontainer"
@@ -28,26 +25,11 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
     preserveAspectRatio="xMidYMid meet"
     >
     `;
+    // plot
+    svg = addStyle(svg);
     svg = addDefs(svg);
     svg = addBg(svg, width, height);
-    // dots
-    let rowi = 0;
-    const drawer = spritesOn
-        ? DrawADot(x, y, w)
-        : DrawADotFromSprite(dataArr, size, x, y, w);
-    while (data.length) {
-        let coli = 0;
-        const row = data.slice(0, w);
-        data = data.slice(w);
-        for (const v of row) {
-            if (v)
-                svg += drawer(coli, rowi);
-            coli++;
-        }
-        rowi++;
-    }
-    if (spritesOn)
-        svg = addEyeIrisFromSprites(svg, width, height);
+    svg = plotDots(svg, width, height, dataArr, size, w, x, y);
     svg = addLogo(svg, width, height);
     // close svg
     svg += `
@@ -58,6 +40,7 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
 
 export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOptions): ReturnType<typeof qrobjToSvg> {
     console.log(`create qr code for`, data);
+    QRCode.toFile(`./test.png`,data);
     if (applicationData.style.logo) {
         if (!o) o = {};
         o.errorCorrectionLevel = `Q`;
@@ -71,35 +54,37 @@ export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOp
     };
 }
 
-function DrawADot(x: (n: number) => number, y: (n: number) => number, w: number) {
+function DrawADot(x: Offsetter, y: Offsetter, w: number) {
     console.log(`DrawADot: w:`, w);
-    const { colorDot, colorEye, colorIris } = applicationData.style;
-    const color = (coli: number, rowi: number) => colorIris && isIrisDot(coli, rowi, w)
-        ? colorIris
-        : colorEye && isEyeDot(coli, rowi, w)
-            ? colorEye
-            : colorDot;
+    const classToUse = (coli: number, rowi: number) => isIrisDot(coli, rowi, w)
+        ? `qriris`
+        : isEyeDot(coli, rowi, w)
+            ? `qreye`
+            : `qrdot`;
     return function drawADot(coli: number, rowi: number) {
-        const c = color(coli, rowi) || `black`;
-        return `<use x="${x(coli)}" y="${y(rowi)}" href="#dot" fill="${c}"></use>`;
+        return `
+  <use x="${x(coli)}" y="${y(rowi)}" href="#dot" class="${classToUse(coli, rowi)}"></use>`;
     };
 }
 
-function DrawADotFromSprite(dataArr: DataArray, size: number, x: (n: number) => number, y: (n: number) => number, w: number) {
-    console.log(`DrawADot: w:`, w);
-    const { colorDot, colorEye, colorIris } = applicationData.style;
-    const color = (coli: number, rowi: number) => colorIris && isIrisDot(coli, rowi, w)
-        ? colorIris
-        : colorEye && isEyeDot(coli, rowi, w)
-            ? colorEye
-            : colorDot;
-    const skip = (coli: number, rowi: number) => (applicationData.style.spritesEyes && isEyeDot(coli, rowi, w)) || (applicationData.style.spritesIrises && isIrisDot(coli, rowi, w));
-    return function drawADot(coli: number, rowi: number) {
+function DrawADotFromSprite(dataArr: DataArray, size: number, x: Offsetter, y: Offsetter, w: number) {
+    console.log(`DrawADotFromSprite: w:`, w, `size:`, size);
+    const classToUse = (coli: number, rowi: number) => isIrisDot(coli, rowi, w)
+        ? `qriris`
+        : isEyeDot(coli, rowi, w)
+            ? `qreye`
+            : `qrdot`;
+    const skip = (coli: number, rowi: number) => (coli<7 && rowi<7) &&( (
+        applicationData.style.spritesEyes !== `default` && isEyeDot(coli, rowi, w)
+    ) || (
+        applicationData.style.spritesIrises !== `default` && isIrisDot(coli, rowi, w)
+    ));
+    const sprites = dotsprites.find(([id]) => applicationData.style?.spritesDots === id)?.[1];
+    return function drawADotFromSprite(coli: number, rowi: number) {
         if (skip(coli, rowi))
             return ``;
-        const c = color(coli, rowi) || `black`;
-        const sprite = dotDisplayValue(dataArr, size, coli, rowi);
-        return `<use x="${x(coli)}" y="${y(rowi)}" href="#${sprite}" fill="${c}"></use>`;
+        const spriteId = dotDisplayValue(dataArr, size, coli, rowi);
+        return `\n  ` + sprites.use(spriteId, x(rowi), y(coli), classToUse(coli, rowi));
     };
 }
 
@@ -165,17 +150,17 @@ function addLogo(svg: string, width: number, height: number) {
         const _width = logoWidth > logoHeight ? Math.round(width / logoMaxQrlength) : logoWidth / logoHeight * (Math.round(height / logoMaxQrlength));
         const _height = logoHeight > logoWidth ? Math.round(height / logoMaxQrlength) : logoHeight / logoWidth * (Math.round(width / logoMaxQrlength));
         svg += `
-    <g id="logo">
+    <g id="logo" class="qrlogo">
         <image x="${Math.round((width - _width) / 2)}" y="${Math.round((height - _height) / 2)}" width="${_width}" height="${_height}" href="${logo}" />
     </g>`;
     }
     return svg;
 }
 function addBg(svg: string, width: number, height: number) {
-    const bgColor = applicationData.style.colorBg || `white`;
+    // const bgColor = applicationData.style.colorBg || `white`;
     svg += `
     <g id="bg">
-        <rect x="0" y="0" width="${width}" height="${height}" fill="${bgColor}"></rect>
+        <rect x="0" y="0" width="${width}" height="${height}" class="qrbg"></rect>
     </g>`;
     return svg;
 }
@@ -198,24 +183,74 @@ function dotDisplayValue(dataArr: DataArray, size: number, coli: number, rowi: n
         (
             coli === 0 ? `-` : dataArr[coli - 1][rowi] ? `t` : `-`
         ) + (
-            rowi === this.size - 1 ? `-` : dataArr[coli][rowi + 1] ? `r` : `-`
+            rowi === size - 1 ? `-` : dataArr[coli][rowi + 1] ? `r` : `-`
         ) + (
-            coli === this.size - 1 ? `-` : dataArr[coli + 1][rowi] ? `b` : `-`
+            coli === size - 1 ? `-` : dataArr[coli + 1][rowi] ? `b` : `-`
         ) + (
             rowi === 0 ? `-` : dataArr[coli][rowi - 1] ? `l` : `-`
         );
 }
 function bufferToDataArr(qrObject: QRCode.QRCode) {
     if (!qrObject) return;
-    const bufferData = [...qrObject.modules.data];
     const size = qrObject.modules.size;
-    const dataArr = [];
-    for (let i = 0; i < size; i++) {
-        dataArr.push(bufferData.slice(i * size, (i + 1) * size));
+    let data = Array.from(qrObject.modules.data) as (1 | 0)[];
+    const w = data.length / size;
+    const dataArr: DataArray = [];
+    while (data.length) {
+        dataArr.push(data.slice(0, w));
+        data = data.slice(w);
     }
-    return { dataArr, size };
+    return { dataArr, w, size };
 }
-function addEyeIrisFromSprites(svg: string, width: number, height: number){
+function addEyeIrisFromSprites(svg: string, width: number, height: number) {
     // to do
+    return svg;
+}
+function addStyle(svg: string) {
+    const { colorBg, colorDot, colorEye, colorIris } = applicationData.style;
+    svg += `
+    <style>
+        <![CDATA[
+            .qrbg, .qrlogo {
+                fill: ${colorBg || `#FFFFFF`};
+            }
+            .qrdot${!colorEye ? `, .qreye` : ``}${!colorIris && !colorEye ? `, .qriris` : ``} {
+                fill: ${colorDot || `#000000`};
+            }
+            ${!colorEye ? `` : `.qreye${!colorIris ? `, .qriris` : ``}{
+                fill: ${colorEye};
+            }` }
+            ${!colorIris ? `` : `.qriris {
+                fill: ${colorIris};
+            }` }
+            .qrtext {
+                color: ${colorDot || `#000000`};
+            }
+        ]]>
+    </style>`;
+    return svg;
+}
+function plotDots(svg: string, width: number, height: number, dataArr: DataArray, size: number, w: number, x: Offsetter, y: Offsetter) {
+    svg += `
+    <g id="dots">`;
+    let rowi = 0;
+    const spritesOn = applicationData.style.spritesDots || applicationData.style.spritesEyes || applicationData.style.spritesIrises;
+    console.log(`Sprites are ${spritesOn ? `on` : `off`}`);
+    const drawer = spritesOn
+        ? DrawADotFromSprite(dataArr, size, x, y, w)
+        : DrawADot(x, y, w);
+    for (const row of dataArr) {
+        let coli = 0;
+        for (const v of row) {
+            if (v)
+                svg += drawer(coli, rowi);
+            coli++;
+        }
+        rowi++;
+    }
+    if (spritesOn)
+        svg = addEyeIrisFromSprites(svg, width, height);
+    svg += `
+    </g>`;
     return svg;
 }

@@ -1,6 +1,6 @@
 import { getPointers } from "./pointers.js";
 import {vcardsEmployeeRowSelector} from "./index.js";
-import { IVcardEmployeeForm } from "../../../types";
+import { IVcardEmployeeForm } from "../../../types.js";
 
 function vcardsRmvDataRow(event: MouseEvent) {
   if (event.target instanceof HTMLButtonElement) {
