@@ -18,7 +18,7 @@ export async function svgToPng(svg: SVGAElement): Promise<string> {
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
+      ctx?.drawImage?.(img, 0, 0, width, height);
       console.log(`canvas drawn`);
       // canvas data url as download link
       const pngDataUrl = canvas.toDataURL();

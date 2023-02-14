@@ -11,5 +11,6 @@
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/render"]
+  "include": ["src/render","src/types.d.ts"],
+  "files": ["src/types.d.ts"]
 }
