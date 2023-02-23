@@ -84,7 +84,7 @@ function DrawADotFromSprite(dataArr: DataArray, size: number, x: Offsetter, y: O
         if (skip(rowi, coli))
             return ``;
         const spriteId = dotDisplayValue(dataArr, size, rowi, coli);
-        return `\n  ` + sprites.use(spriteId, x(coli), y(rowi), classToUse(rowi, coli));
+        return `\n  ` + sprites.use(x(coli), y(rowi), spriteId, classToUse(rowi, coli));
     };
 }
 
