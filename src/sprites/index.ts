@@ -1,6 +1,12 @@
 import { ISpritesLists } from "../types";
 import { DotSprites } from "./DotSprites";
 
+function nameToId (n:string) {
+  const id = n.toLowerCase().replace(/\s+/g,`-`);
+  console.log(`name to id : "${n}" => "${id}"`);
+  return id;
+}
+
 import { sprites as s1 } from "./dots/circle";
 import { sprites as s2 } from "./dots/pointy-rounded";
 import { sprites as s3 } from "./dots/rounded-arc";
@@ -17,6 +23,20 @@ import { sprites as s13 } from "./dots/pointy-concave-rounded";
 import { sprites as s14 } from "./dots/rounded";
 import { sprites as s15 } from "./dots/rounded-diagonal";
 import { sprites as s16 } from "./dots/y-line-rounded";
+
+import { sprites as e1 } from "./eyes/circle-chain";
+import { sprites as e2 } from "./eyes/circle-chain-2";
+import { sprites as e3 } from "./eyes/point-top-left";
+import { sprites as e4 } from "./eyes/rounded";
+import { sprites as e5 } from "./eyes/style-10";
+import { sprites as e6 } from "./eyes/style-3";
+import { sprites as e7 } from "./eyes/style-4";
+import { sprites as e8 } from "./eyes/style-5";
+import { sprites as e9 } from "./eyes/style-6";
+import { sprites as e10 } from "./eyes/style-7";
+import { sprites as e11 } from "./eyes/style-8";
+import { sprites as e12 } from "./eyes/style-9";
+
 export const dotsprites: [string, DotSprites][] = [
   ["default",
     s9],
@@ -51,8 +71,21 @@ export const dotsprites: [string, DotSprites][] = [
   ["y-line-rounded",
     s16],
 ];
-import { sprites as e1 } from "./eyes/rounded";
-export const eyesprites: [string, EyeSprites][] = [[`rounded`, e1]];
+
+export const eyesprites: [string, EyeSprites][] = [
+  [nameToId(e1.displayName), e1],
+  [nameToId(e2.displayName), e2],
+  [nameToId(e3.displayName), e3],
+  [nameToId(e4.displayName), e4],
+  [nameToId(e5.displayName), e5],
+  [nameToId(e6.displayName), e6],
+  [nameToId(e7.displayName), e7],
+  [nameToId(e8.displayName), e8],
+  [nameToId(e9.displayName), e9],
+  [nameToId(e10.displayName), e10],
+  [nameToId(e11.displayName), e11],
+  [nameToId(e12.displayName), e12],
+];
 import { sprites as i1 } from "./irises/rounded";
 import { EyeSprites } from "./EyeSprites";
 import { IrisSprites } from "./IrisSprites";
