@@ -145,7 +145,7 @@ async function getImageFromRow(row: HTMLElement): Promise<IImgFileDesc> {
   const rowi = row.dataset.row;
   const surname = encodeURI((row.children[2].firstChild as HTMLInputElement).value);
   const filename = `${String(rowi).padStart(3, `0`)} - ${surname}.png`;
-  const svg = row.querySelector(`#qr-${rowi}`) as SVGAElement;
+  const svg = row.querySelector(`#qr-${rowi} svg`) as SVGAElement;
   const dataUrl = await svgToPng(svg);
   const data = getBase64String(dataUrl);
   return { filename, data };
