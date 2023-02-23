@@ -68,13 +68,13 @@ function DrawADot(x: Offsetter, y: Offsetter, w: number) {
 }
 
 function DrawADotFromSprite(dataArr: DataArray, size: number, x: Offsetter, y: Offsetter, w: number) {
-    console.log(`DrawADotFromSprite: w:`, w, `size:`, size);
+    // console.log(`DrawADotFromSprite: w:`, w, `, size:`, size, `, eye sprites:`,`${applicationData.style.spritesEyes}, eye iris: ${applicationData.style.spritesIrises}`);
     const classToUse = (rowi: number, coli: number) => isIrisDot(rowi, coli, w)
         ? `qriris`
         : isEyeDot(rowi, coli, w)
             ? `qreye`
             : `qrdot`;
-    const skip = (rowi: number, coli: number) => (coli < 7 && rowi < 7) && ((
+    const skip = (rowi: number, coli: number) => (coli < 7 || rowi < 7) && ((
         applicationData.style.spritesEyes !== `default` && isEyeDot(rowi, coli, w)
     ) || (
             applicationData.style.spritesIrises !== `default` && isIrisDot(rowi, coli, w)
