@@ -40,7 +40,7 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
 
 export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOptions): ReturnType<typeof qrobjToSvg> {
     console.log(`create qr code for`, data);
-    QRCode.toFile(`./test.png`, data);
+    // QRCode.toFile(`./test.png`, data);
     if (applicationData.style.logo) {
         if (!o) o = {};
         o.errorCorrectionLevel = `Q`;
