@@ -55,6 +55,7 @@ export async function vcardsAddDataRow(event?: Event|MouseEvent, employeeData?: 
     td.appendChild(b);
     const svgDiv = document.createElement(`div`);
     svgDiv.setAttribute(`id`,  `qr-${rowi}`);
+    svgDiv.classList.add(`no-display`);
     td.appendChild(svgDiv);
     // const s = document.createElementNS('http://www.w3.org/2000/svg', `svg`);
     // s.classList.add(`no-display`);
