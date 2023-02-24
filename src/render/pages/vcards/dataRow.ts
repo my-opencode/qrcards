@@ -1,6 +1,6 @@
 import { getPointers } from "./pointers.js";
 import {vcardsEmployeeRowSelector} from "./index.js";
-import { IVcardEmployeeForm } from "../../../types";
+import { IVcardEmployeeForm } from "../../../types.js";
 
 function vcardsRmvDataRow(event: MouseEvent) {
   if (event.target instanceof HTMLButtonElement) {
@@ -10,7 +10,7 @@ function vcardsRmvDataRow(event: MouseEvent) {
   }
 }
 
-export async function vcardsAddDataRow(event?: MouseEvent, employeeData?: IVcardEmployeeForm):Promise<void> {
+export async function vcardsAddDataRow(event?: Event|MouseEvent, employeeData?: IVcardEmployeeForm):Promise<void> {
   console.log(`add data row`);
   const { employee_form_fields } = await window.dataapi.getappdata();
   const { vcardsTable } = getPointers(/* document */);
@@ -39,8 +39,8 @@ export async function vcardsAddDataRow(event?: MouseEvent, employeeData?: IVcard
     i.setAttribute(`type`, `text`);
     i.setAttribute(`id`, `vc-${rowi}-${f}`);
     i.setAttribute(`size`, `10`);
-    if (employeeData)
-      i.setAttribute(`value`, employeeData[f]);
+    if (employeeData?.[f])
+      i.setAttribute(`value`, employeeData[f]||``);
     td.appendChild(i);
     row.appendChild(td);
   }
@@ -53,25 +53,28 @@ export async function vcardsAddDataRow(event?: MouseEvent, employeeData?: IVcard
     b.innerText = `X`;
     b.addEventListener(`click`, vcardsRmvDataRow);
     td.appendChild(b);
-    const s = document.createElementNS('http://www.w3.org/2000/svg', `svg`);
-    s.classList.add(`no-display`);
-    s.setAttribute(`xmlns`, 'http://www.w3.org/2000/svg');
-    s.setAttribute(`id`, `qr-${rowi}`);
-    s.setAttribute(`height`, `2000`);
-    s.setAttribute(`width`, `2000`);
-    s.setAttribute(`preserveAspectRatio`, "xMidYMid meet");
-    const sdef = document.createElementNS('http://www.w3.org/2000/svg', `def`);
-    const sdefr = document.createElementNS('http://www.w3.org/2000/svg', `rect`);
-    sdefr.setAttribute(`id`, `dot`);
-    sdefr.setAttribute(`height`, `10.15`);
-    sdefr.setAttribute(`width`, `10.15`);
-    // sdefr.setAttribute(`fill`, `black`);
-    sdef.appendChild(sdefr);
-    s.appendChild(sdef);
-    const sqr = document.createElementNS('http://www.w3.org/2000/svg', `g`);
-    sqr.setAttribute(`id`, `qrdisplay-${rowi}`);
-    s.appendChild(sqr);
-    td.appendChild(s);
+    const svgDiv = document.createElement(`div`);
+    svgDiv.setAttribute(`id`,  `qr-${rowi}`);
+    td.appendChild(svgDiv);
+    // const s = document.createElementNS('http://www.w3.org/2000/svg', `svg`);
+    // s.classList.add(`no-display`);
+    // s.setAttribute(`xmlns`, 'http://www.w3.org/2000/svg');
+    // s.setAttribute(`id`, `qr-${rowi}`);
+    // s.setAttribute(`height`, `2000`);
+    // s.setAttribute(`width`, `2000`);
+    // s.setAttribute(`preserveAspectRatio`, "xMidYMid meet");
+    // const sdef = document.createElementNS('http://www.w3.org/2000/svg', `def`);
+    // const sdefr = document.createElementNS('http://www.w3.org/2000/svg', `rect`);
+    // sdefr.setAttribute(`id`, `dot`);
+    // sdefr.setAttribute(`height`, `10.15`);
+    // sdefr.setAttribute(`width`, `10.15`);
+    // // sdefr.setAttribute(`fill`, `black`);
+    // sdef.appendChild(sdefr);
+    // s.appendChild(sdef);
+    // const sqr = document.createElementNS('http://www.w3.org/2000/svg', `g`);
+    // sqr.setAttribute(`id`, `qrdisplay-${rowi}`);
+    // s.appendChild(sqr);
+    // td.appendChild(s);
     row.appendChild(td);
   }
   vcardsTable.appendChild(row);

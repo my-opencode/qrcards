@@ -2,10 +2,10 @@ import { DotSprites } from "../DotSprites";
 
 const definitions = `
 		<rect id="zeroTwoThreeFour" y="0" width="100" height="100"/>
-		<path id="1---l" d="M59.4,0H0v100h59.4L100,50L59.4,0z$/>
-		<path id="1--b-" d="M100,40.6V100H0V40.6L50,0L100,40.6z$/>
-		<path id="1-r--" d="M40.6,0H100v100H40.6L0,50L40.6,0z$/>
-		<path id="1t---" d="M100,59.4V0H0v59.4L50,100L100,59.4z$/>`;
+		<path id="1---l" d="M59.4,0H0v100h59.4L100,50L59.4,0z"/>
+		<path id="1--b-" d="M100,40.6V100H0V40.6L50,0L100,40.6z"/>
+		<path id="1-r--" d="M40.6,0H100v100H40.6L0,50L40.6,0z"/>
+		<path id="1t---" d="M100,59.4V0H0v59.4L50,100L100,59.4z"/>`;
 const useIds = {
   // "0----": " ",
   // "0t---": " ",

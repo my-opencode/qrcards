@@ -17,7 +17,7 @@ import { sprites as s13 } from "./dots/pointy-concave-rounded";
 import { sprites as s14 } from "./dots/rounded";
 import { sprites as s15 } from "./dots/rounded-diagonal";
 import { sprites as s16 } from "./dots/y-line-rounded";
-const dotsprites: [string, DotSprites][] = [
+export const dotsprites: [string, DotSprites][] = [
   ["default",
     s9],
   ["circle",
@@ -52,11 +52,11 @@ const dotsprites: [string, DotSprites][] = [
     s16],
 ];
 import { sprites as e1 } from "./eyes/rounded";
-const eyesprites: [string, EyeSprites][] = [[`rounded`, e1]];
+export const eyesprites: [string, EyeSprites][] = [[`rounded`, e1]];
 import { sprites as i1 } from "./irises/rounded";
 import { EyeSprites } from "./EyeSprites";
 import { IrisSprites } from "./IrisSprites";
-const irissprites: [string, IrisSprites][] = [[`rounded`, i1]];
+export const irissprites: [string, IrisSprites][] = [[`rounded`, i1]];
 
 // export async function getSprites(dir: string): Promise<ISpriteListItem[]> {
 //   const files = await fs.readdir(dir);
@@ -83,7 +83,7 @@ const irissprites: [string, IrisSprites][] = [[`rounded`, i1]];
 //   return getSprites(`irises`);
 // }
 
-export function listAllSpritesHandler(event: Event): ISpritesLists {
+export function listAllSpritesHandler(event?: Event): ISpritesLists {
   const dots = dotsprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
   const eyes = eyesprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
   const irises = irissprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
