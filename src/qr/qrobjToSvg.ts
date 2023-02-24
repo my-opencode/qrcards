@@ -68,13 +68,13 @@ function DrawADot(x: Offsetter, y: Offsetter, w: number) {
 }
 
 function DrawADotFromSprite(dataArr: DataArray, size: number, x: Offsetter, y: Offsetter, w: number) {
-    console.log(`DrawADotFromSprite: w:`, w, `size:`, size);
+    // console.log(`DrawADotFromSprite: w:`, w, `, size:`, size, `, eye sprites:`,`${applicationData.style.spritesEyes}, eye iris: ${applicationData.style.spritesIrises}`);
     const classToUse = (rowi: number, coli: number) => isIrisDot(rowi, coli, w)
         ? `qriris`
         : isEyeDot(rowi, coli, w)
             ? `qreye`
             : `qrdot`;
-    const skip = (rowi: number, coli: number) => (coli < 7 && rowi < 7) && ((
+    const skip = (rowi: number, coli: number) => (coli < 7 || rowi < 7) && ((
         applicationData.style.spritesEyes !== `default` && isEyeDot(rowi, coli, w)
     ) || (
             applicationData.style.spritesIrises !== `default` && isIrisDot(rowi, coli, w)
@@ -84,7 +84,7 @@ function DrawADotFromSprite(dataArr: DataArray, size: number, x: Offsetter, y: O
         if (skip(rowi, coli))
             return ``;
         const spriteId = dotDisplayValue(dataArr, size, rowi, coli);
-        return `\n  ` + sprites.use(spriteId, x(coli), y(rowi), classToUse(rowi, coli));
+        return `\n  ` + sprites.use(x(coli), y(rowi), spriteId, classToUse(rowi, coli));
     };
 }
 
@@ -202,8 +202,22 @@ function bufferToDataArr(qrObject: QRCode.QRCode) {
     }
     return { dataArr, w, size };
 }
-function addEyeIrisFromSprites(svg: string, width: number, height: number) {
-    // to do
+function addEyeIrisFromSprites(svg: string, x:Offsetter, y:Offsetter, height: number, width: number) {
+    console.log(`called`, applicationData.style.spritesEyes,applicationData.style.spritesIrises);
+    const eyePositionNames = [`topleft`, `topright`, `bottomleft`];
+    const eyePositions: [number,number][] = [[0, 0], [width - 7, 0], [0, height - 7]].map(c=>[x(c[0]),y(c[1])]);
+    const irisPositions: [number,number][] = [[2,2], [width - 5, 2], [0, height - 5]].map(c=>[x(c[0]),y(c[1])]);
+    if (applicationData.style.spritesIrises && applicationData.style.spritesIrises !== `default`) {
+        const s = irissprites.find(es => es[0] === applicationData.style.spritesIrises)?.[1];
+        console.log(applicationData.style.spritesIrises, eyesprites.map(esa=>esa[0]).join(``), s);
+        if (s)
+            eyePositionNames.forEach((p,i) => svg += s.use(...irisPositions[i], p));
+    }
+    if (applicationData.style.spritesEyes && applicationData.style.spritesEyes !== `default`) {
+        const s = eyesprites.find(es => es[0] === applicationData.style.spritesEyes)?.[1];
+        if (s)
+            eyePositionNames.forEach((p,i) => svg += s.use(...eyePositions[i], p));
+    }
     return svg;
 }
 function addStyle(svg: string) {
@@ -244,7 +258,7 @@ function plotDots(svg: string, width: number, height: number, dataArr: DataArray
                 svg += drawer(rowi, coli);
 
     if (spritesOn)
-        svg = addEyeIrisFromSprites(svg, width, height);
+        svg = addEyeIrisFromSprites(svg, x, y, dataArr.length, dataArr[0].length);
     svg += `
     </g>`;
     return svg;

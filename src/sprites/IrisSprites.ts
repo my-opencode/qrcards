@@ -1,5 +1,5 @@
-import { Sprites } from "./Sprites";
-
-export class IrisSprites extends Sprites {
-  category = `iris`
+import { EyeSprites, IEyePosObj } from "./EyeSprites";
+export { IEyePosObj };
+export class IrisSprites extends EyeSprites {
+  category = `iris`;
 }
