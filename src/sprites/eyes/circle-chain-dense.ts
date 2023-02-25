@@ -43,7 +43,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Circle Chain`,
+    `Dense Circle Chain`,
     definitions,
     useIds
 );
