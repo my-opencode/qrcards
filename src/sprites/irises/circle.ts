@@ -17,5 +17,5 @@ export const sprites = new IrisSprites(
 );
 sprites.use = function(this:IrisSprites, x:number, y:number,id:string,classes?:string){
   const halfStep = 15;
-  return `<use xlink:href="#iris" class="${classes||this.defaultClass}" x="${x + halfStep}" y="${y + halfStep}" />`;
+  return `<use xlink:href="#${this.useIds[id]||`iris`}" class="${classes||this.defaultClass}" x="${x + halfStep}" y="${y + halfStep}" />`;
 };

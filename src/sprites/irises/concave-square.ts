@@ -12,7 +12,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new IrisSprites(
-    `Shaken squares`,
+    `Concave square`,
     definitions,
     useIds
 );
