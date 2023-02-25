@@ -27,7 +27,7 @@ const useIds: IEyePosObj = {
     topright: `eye`
 };
 export const sprites = new EyeSprites(
-    `Dense Circle Chain`,
+    `Circle Chain`,
     definitions,
     useIds
 );
