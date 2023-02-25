@@ -48,7 +48,7 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `End: rounded, Corner: rounded, dot: circle`,
+  `End: rounded, \nCorner: rounded, \nDot: circle`,
   definitions,
   useIds
 );

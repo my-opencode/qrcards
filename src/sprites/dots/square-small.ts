@@ -1,6 +1,6 @@
 import { DotSprites } from "../DotSprites";
 
-const definitions = `<rect id="dot" x="0" y="0"  width="100" height="100"/>`;
+const definitions = `<rect id="dot" x="6.5" y="6.5" width="87" height="87"/>`;
 
 const useIds = {
   // "0----": "",
@@ -38,9 +38,8 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `Default`,
+  `Small Square`,
   definitions,
   useIds
 );
-
-
+  

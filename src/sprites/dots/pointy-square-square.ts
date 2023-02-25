@@ -40,4 +40,4 @@ const useIds = {
   "1-rbl": "zeroTwoThreeFour",
   "1trbl": "zeroTwoThreeFour",
 };
-export const sprites = new DotSprites(`Ends: pointy, corners: square, dot: square`,definitions, useIds);
+export const sprites = new DotSprites(`Ends: pointy, \nCorner: square, \nDot: square`,definitions, useIds);

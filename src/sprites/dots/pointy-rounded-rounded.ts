@@ -47,4 +47,4 @@ const useIds = {
   "1-rbl": "threeFourTbLr",
   "1trbl": "threeFourTbLr",
 };
-export const sprites = new DotSprites(`End: pointy, Corners: rounded, dot: rounded`,definitions, useIds);
+export const sprites = new DotSprites(`End: pointy, \nCorner: rounded, \nDot: rounded`,definitions, useIds);
