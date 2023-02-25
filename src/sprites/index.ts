@@ -1,8 +1,8 @@
 import { ISpritesLists } from "../types";
 import { DotSprites } from "./DotSprites";
 
-function nameToId (n:string) {
-  const id = n.toLowerCase().replace(/\s+/g,`-`);
+function nameToId(n: string) {
+  const id = n.toLowerCase().replace(/\s+/g, `-`);
   console.log(`name to id : "${n}" => "${id}"`);
   return id;
 }
