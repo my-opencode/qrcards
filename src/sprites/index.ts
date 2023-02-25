@@ -3,7 +3,6 @@ import { DotSprites } from "./DotSprites";
 
 function nameToId(n: string) {
   const id = n.toLowerCase().replace(/\s+/g, `-`);
-  console.log(`name to id : "${n}" => "${id}"`);
   return id;
 }
 
@@ -22,6 +21,20 @@ import { sprites as s13 } from "./dots/pointy-concave-rounded";
 import { sprites as s14 } from "./dots/rounded-rounded-circle";
 import { sprites as s15 } from "./dots/rounded-diagonal";
 import { sprites as s16 } from "./dots/y-line-rounded";
+
+import { sprites as dotSquare } from "./dots/default";
+import { sprites as dotShakenSquares } from "./dots/shaken-squares";
+import { sprites as dotSquareSmall } from "./dots/square-small";
+import { sprites as dotCircle } from "./dots/circle";
+import { sprites as dotCircleSmall } from "./dots/circle-small";
+import { sprites as dotPointyRoundedRounded } from "./dots/pointy-rounded-rounded";
+import { sprites as dotClawClawCircle } from "./dots/claw-claw-circle";
+import { sprites as dotPointySquareSquare } from "./dots/pointy-square-square";
+import { sprites as dotPointyClippedLosange } from "./dots/pointy-clipped-losange";
+import { sprites as dotXLines } from "./dots/x-line-rounded";
+import { sprites as dotPointyConcaveRounded } from "./dots/pointy-concave-rounded-circle";
+import { sprites as dotRoundedRoundedCircle } from "./dots/rounded-rounded-circle";
+import { sprites as dotYLines } from "./dots/y-line-rounded";
 
 import { sprites as eyeCircleChain } from "./eyes/circle-chain";
 import { sprites as eyeCircleChainDense } from "./eyes/circle-chain-dense";
@@ -127,7 +140,7 @@ export const irissprites: [string, IrisSprites][] = [
 // }
 
 export function listAllSpritesHandler(event?: Event): ISpritesLists {
-  const dots = dotsprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
+  const dots = dotsprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
   const eyes = eyesprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
   const irises = irissprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
   return { dots, eyes, irises };

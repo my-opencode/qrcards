@@ -1,6 +1,6 @@
 import { DotSprites } from "../DotSprites";
 
-const definitions = `<rect id="dot" x="0" y="0"  width="100" height="100"/>`;
+const definitions = `<circle id="dot" cx="0" cy="0" r="40" />`;
 
 const useIds = {
   // "0----": "",
@@ -38,9 +38,12 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `Default`,
+  `Small Circle`,
   definitions,
   useIds
 );
-
+sprites.use = function(this:DotSprites, x:number, y:number,id:string,classes?:string){
+  const halfStep = 5;
+  return `<use xlink:href="#${this.useIds[id]||`dot`}" class="${classes||this.defaultClass}" x="${x + halfStep}" y="${y + halfStep}" />`;
+};
 
