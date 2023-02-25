@@ -81,7 +81,8 @@ export interface IUploadedImage {
 
 export interface ISpriteListItem {
     id: string,
-    displayName: string
+    displayName: string;
+    preview: string
     // sprites: Sprites | DotSprites | EyeSprites | IrisSprites
 }
 
