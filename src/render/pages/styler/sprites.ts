@@ -42,7 +42,7 @@ export function getSpritesPointers(): IDocSpritePointers {
   };
 }
 
-function buildSpriteCheckbox(name: string, id: string, displayName: string) {
+function buildSpriteCheckbox(name: string, id: string, displayName: string, preview:string) {
   const label = document.createElement(`label`);
   const input = document.createElement(`input`);
   input.setAttribute(`type`, `radio`);
@@ -55,14 +55,16 @@ function buildSpriteCheckbox(name: string, id: string, displayName: string) {
   label.appendChild(input);
   const selector = document.createElement(`div`);
   selector.setAttribute(`class`, `radio-selector`);
-  const preview = document.createElement(`div`);
-  preview.setAttribute(`class`, `sprite-preview`);
-  selector.appendChild(preview);
-  const txtSpan = document.createElement(`span`);
-  txtSpan.setAttribute(`class`, `txt-center`);
-  const txt = document.createTextNode(displayName);
-  txtSpan.appendChild(txt);
-  selector.appendChild(txtSpan);
+  const previewDiv = document.createElement(`div`);
+  previewDiv.setAttribute(`class`, `sprite-preview`);
+  previewDiv.innerHTML = preview;
+  selector.setAttribute(`title`,displayName);
+  selector.appendChild(previewDiv);
+  // const txtSpan = document.createElement(`span`);
+  // txtSpan.setAttribute(`class`, `txt-center`);
+  // const txt = document.createTextNode(displayName);
+  // txtSpan.appendChild(txt);
+  // selector.appendChild(txtSpan);
   label.appendChild(selector);
   return label;
 }
@@ -70,9 +72,9 @@ function buildSpriteCheckbox(name: string, id: string, displayName: string) {
 function buildOneForm(container: HTMLElement, name: string, spritesArr: ISpriteListItem[]/* ,value?:string */, defaultNone?: boolean) {
   container.innerHTML = ``;
   if (defaultNone)
-    container.appendChild(buildSpriteCheckbox(name, `default`, `No style (default)`));
-  for (const { id, displayName } of spritesArr)
-    container.appendChild(buildSpriteCheckbox(name, id, displayName));
+    container.appendChild(buildSpriteCheckbox(name, `default`, `No style (default)`, ``));
+  for (const { id, displayName, preview } of spritesArr)
+    container.appendChild(buildSpriteCheckbox(name, id, displayName, preview));
   // if(!value)
   container.children[0].children[0].setAttribute(`checked`, `checked`);
 }

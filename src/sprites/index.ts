@@ -1,26 +1,18 @@
 import { ISpritesLists } from "../types";
 import { DotSprites } from "./DotSprites";
+import { EyeSprites } from "./EyeSprites";
+import { IrisSprites } from "./IrisSprites";
 
 function nameToId(n: string) {
   const id = n.toLowerCase().replace(/\s+/g, `-`);
   return id;
 }
 
-import { sprites as s1 } from "./dots/circle";
-import { sprites as s2 } from "./dots/pointy-rounded-rounded";
-import { sprites as s4 } from "./dots/rounded-straight";
-import { sprites as s5 } from "./dots/claw-claw-circle";
-import { sprites as s6 } from "./dots/pointy-square-square";
-import { sprites as s7 } from "./dots/rounded-concave-small-zero";
-import { sprites as s8 } from "./dots/sharp-rounded";
-import { sprites as s9 } from "./dots/default";
-import { sprites as s10 } from "./dots/pointy-straight";
-import { sprites as s11 } from "./dots/rounded-concave-square";
-import { sprites as s12 } from "./dots/x-line-rounded";
-import { sprites as s13 } from "./dots/pointy-concave-rounded";
-import { sprites as s14 } from "./dots/rounded-rounded-circle";
-import { sprites as s15 } from "./dots/rounded-diagonal";
-import { sprites as s16 } from "./dots/y-line-rounded";
+type IIdSpriteArr<T extends DotSprites> = [string, T, string];
+
+function toIdSpriteArr<T extends DotSprites>(sprites: T): IIdSpriteArr<T> {
+  return [nameToId(sprites.displayName), sprites, sprites.preview()];
+}
 
 import { sprites as dotSquare } from "./dots/default";
 import { sprites as dotShakenSquares } from "./dots/shaken-squares";
@@ -63,55 +55,51 @@ import { sprites as irisNineCircles } from "./irises/nine-circles";
 import { sprites as irisRounded } from "./irises/rounded";
 import { sprites as irisRoundedOneCorner } from "./irises/rounded-one-corner";
 
-export const dotsprites: [string, DotSprites][] = [
-  ["default", s9],
-  [nameToId(s1.displayName), s1],
-  [nameToId(s5.displayName), s5],
-  [nameToId(s14.displayName), s14],
-  [nameToId(s11.displayName), s11],
-  [nameToId(s7.displayName), s7],
-  [nameToId(s15.displayName), s15],
-  [nameToId(s4.displayName), s4],
-  [nameToId(s2.displayName), s2],
-  [nameToId(s6.displayName), s6],
-  [nameToId(s10.displayName), s10],
-  [nameToId(s13.displayName), s13],
-  [nameToId(s8.displayName), s8],
-  [nameToId(s12.displayName), s12],
-  [nameToId(s16.displayName), s16],
+export const dotsprites: IIdSpriteArr<DotSprites>[] = [
+  toIdSpriteArr(dotSquare),
+  toIdSpriteArr(dotCircle),
+  toIdSpriteArr(dotClawClawCircle),
+  toIdSpriteArr(dotRoundedRoundedCircle),
+  toIdSpriteArr(dotCircleSmall),
+  toIdSpriteArr(dotShakenSquares),
+  toIdSpriteArr(dotPointyRoundedRounded),
+  toIdSpriteArr(dotPointySquareSquare),
+  toIdSpriteArr(dotPointyClippedLosange),
+  toIdSpriteArr(dotPointyConcaveRounded),
+  toIdSpriteArr(dotSquareSmall),
+  toIdSpriteArr(dotXLines),
+  toIdSpriteArr(dotYLines),
 ];
 
-import { EyeSprites } from "./EyeSprites";
-export const eyesprites: [string, EyeSprites][] = [
-  [nameToId(eyeRounded.displayName), eyeRounded],
-  [nameToId(eyeRoundedOutside.displayName), eyeRoundedOutside],
-  [nameToId(eyeShakenSquares.displayName), eyeShakenSquares],
-  [nameToId(eyeBiscuit.displayName), eyeBiscuit],
-  [nameToId(eyePointySkewed.displayName), eyePointySkewed],
-  [nameToId(eyeCircleChain.displayName), eyeCircleChain],
-  [nameToId(eyeCircleChainDense.displayName), eyeCircleChainDense],
-  [nameToId(eyeClippedDiagonalCenter.displayName), eyeClippedDiagonalCenter],
-  [nameToId(eyePointyDiagonalCenter.displayName), eyePointyDiagonalCenter],
-  [nameToId(eyePointTopLeft.displayName), eyePointTopLeft],
-  [nameToId(eyePointyChain.displayName), eyePointyChain],
-  [nameToId(eyeDialogBox.displayName), eyeDialogBox],
+export const eyesprites: IIdSpriteArr<EyeSprites>[] = [
+  toIdSpriteArr(eyeRounded),
+  toIdSpriteArr(eyeRoundedOutside),
+  toIdSpriteArr(eyeShakenSquares),
+  toIdSpriteArr(eyeBiscuit),
+  toIdSpriteArr(eyePointySkewed),
+  toIdSpriteArr(eyeCircleChain),
+  toIdSpriteArr(eyeClippedDiagonalCenter),
+  toIdSpriteArr(eyePointyDiagonalCenter),
+  toIdSpriteArr(eyeDialogBox),
+  toIdSpriteArr(eyeCircleChainDense),
+  toIdSpriteArr(eyePointTopLeft),
+  toIdSpriteArr(eyePointyChain),
 ];
 
-import { IrisSprites } from "./IrisSprites";
-export const irissprites: [string, IrisSprites][] = [
-  [nameToId(irisCircle.displayName), irisCircle],
-  [nameToId(irisRoundedOneCorner.displayName), irisRoundedOneCorner],
-  [nameToId(irisShakenSquares.displayName), irisShakenSquares],
-  [nameToId(irisBiscuit.displayName), irisBiscuit],
-  [nameToId(irisSkewedOutside.displayName), irisSkewedOutside],
-  [nameToId(irisNineCircles.displayName), irisNineCircles],
-  [nameToId(irisRoundedClipped.displayName), irisRoundedClipped],
-  [nameToId(irisGems.displayName), irisGems],
-  [nameToId(irisConcaveSquare.displayName), irisConcaveSquare],
-  [nameToId(irisTorn.displayName), irisTorn],
-  [nameToId(irisDialogBox.displayName), irisDialogBox],
-  [nameToId(irisVerticalRoundedBars.displayName), irisVerticalRoundedBars],
-  [nameToId(irisRounded.displayName), irisRounded],
+export const irissprites: IIdSpriteArr<IrisSprites>[] = [
+  toIdSpriteArr(irisRounded),
+  toIdSpriteArr(irisRoundedOneCorner),
+  toIdSpriteArr(irisShakenSquares),
+  toIdSpriteArr(irisBiscuit),
+  toIdSpriteArr(irisSkewedOutside),
+  toIdSpriteArr(irisNineCircles),
+  toIdSpriteArr(irisRoundedClipped),
+  toIdSpriteArr(irisGems),
+  toIdSpriteArr(irisDialogBox),
+  toIdSpriteArr(irisConcaveSquare),
+  toIdSpriteArr(irisTorn),
+  toIdSpriteArr(irisVerticalRoundedBars),
+  toIdSpriteArr(irisCircle),
 ];
 
 // export async function getSprites(dir: string): Promise<ISpriteListItem[]> {
@@ -141,8 +129,8 @@ export const irissprites: [string, IrisSprites][] = [
 
 export function listAllSpritesHandler(event?: Event): ISpritesLists {
   const dots = dotsprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
-  const eyes = eyesprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
-  const irises = irissprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
+  const eyes = eyesprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
+  const irises = irissprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
   return { dots, eyes, irises };
 }
 

@@ -1,4 +1,5 @@
 import { DotSprites, IStrObj } from "./DotSprites";
+import { spritePreviewEyes } from "./preview";
 
 export interface IEyePosObj extends IStrObj { 
   topleft: string,
@@ -8,6 +9,9 @@ export interface IEyePosObj extends IStrObj {
 export class EyeSprites extends DotSprites {
   category = `eye`;
   useIds: IEyePosObj;
+  preview():string{
+    return spritePreviewEyes(this);
+  }
 }
 
 // <use xlink:href="#eye-rounded" x="0" y="0" class="${classes || `eye0`}" />
