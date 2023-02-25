@@ -23,18 +23,18 @@ import { sprites as s14 } from "./dots/rounded-rounded-circle";
 import { sprites as s15 } from "./dots/rounded-diagonal";
 import { sprites as s16 } from "./dots/y-line-rounded";
 
-import { sprites as e1 } from "./eyes/circle-chain";
-import { sprites as e2 } from "./eyes/circle-chain-2";
-import { sprites as e3 } from "./eyes/point-top-left";
-import { sprites as e4 } from "./eyes/rounded";
-import { sprites as e5 } from "./eyes/style-10";
-import { sprites as e6 } from "./eyes/style-3";
-import { sprites as e7 } from "./eyes/style-4";
-import { sprites as e8 } from "./eyes/style-5";
-import { sprites as e9 } from "./eyes/style-6";
-import { sprites as e10 } from "./eyes/style-7";
-import { sprites as e11 } from "./eyes/style-8";
-import { sprites as e12 } from "./eyes/style-9";
+import { sprites as eyeCircleChain } from "./eyes/circle-chain";
+import { sprites as eyeCircleChainDense } from "./eyes/circle-chain-dense";
+import { sprites as eyePointTopLeft } from "./eyes/point-top-left";
+import { sprites as eyePointyChain } from "./eyes/pointy-chain";
+import { sprites as eyeShakenSquares } from "./eyes/shaken-squares";
+import { sprites as eyePointySkewed } from "./eyes/pointy-skewed";
+import { sprites as eyePointyDiagonalCenter } from "./eyes/pointy-diagonal-center";
+import { sprites as eyeDialogBox } from "./eyes/dialog-box";
+import { sprites as eyeRoundedOutside } from "./eyes/rounded-outside";
+import { sprites as eyeClippedDiagonalCenter } from "./eyes/clipped-diagonal-center";
+import { sprites as eyeRounded } from "./eyes/rounded";
+import { sprites as eyeBiscuit } from "./eyes/biscuit";
 
 import { sprites as irisCircle } from "./irises/circle";
 import { sprites as irisConcaveSquare } from "./irises/concave-square";
@@ -68,19 +68,20 @@ export const dotsprites: [string, DotSprites][] = [
   [nameToId(s16.displayName), s16],
 ];
 
+import { EyeSprites } from "./EyeSprites";
 export const eyesprites: [string, EyeSprites][] = [
-  [nameToId(e1.displayName), e1],
-  [nameToId(e2.displayName), e2],
-  [nameToId(e3.displayName), e3],
-  [nameToId(e4.displayName), e4],
-  [nameToId(e5.displayName), e5],
-  [nameToId(e6.displayName), e6],
-  [nameToId(e7.displayName), e7],
-  [nameToId(e8.displayName), e8],
-  [nameToId(e9.displayName), e9],
-  [nameToId(e10.displayName), e10],
-  [nameToId(e11.displayName), e11],
-  [nameToId(e12.displayName), e12],
+  [nameToId(eyeRounded.displayName), eyeRounded],
+  [nameToId(eyeRoundedOutside.displayName), eyeRoundedOutside],
+  [nameToId(eyeShakenSquares.displayName), eyeShakenSquares],
+  [nameToId(eyeBiscuit.displayName), eyeBiscuit],
+  [nameToId(eyePointySkewed.displayName), eyePointySkewed],
+  [nameToId(eyeCircleChain.displayName), eyeCircleChain],
+  [nameToId(eyeCircleChainDense.displayName), eyeCircleChainDense],
+  [nameToId(eyeClippedDiagonalCenter.displayName), eyeClippedDiagonalCenter],
+  [nameToId(eyePointyDiagonalCenter.displayName), eyePointyDiagonalCenter],
+  [nameToId(eyePointTopLeft.displayName), eyePointTopLeft],
+  [nameToId(eyePointyChain.displayName), eyePointyChain],
+  [nameToId(eyeDialogBox.displayName), eyeDialogBox],
 ];
 
 import { IrisSprites } from "./IrisSprites";

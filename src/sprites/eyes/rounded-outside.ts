@@ -16,7 +16,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Style 6`,
+    `Rounded outside`,
     definitions,
     useIds
 );

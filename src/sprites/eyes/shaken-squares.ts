@@ -34,7 +34,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-	`Style 10`,
+	`Shaken squares`,
 	definitions,
 	useIds
 );

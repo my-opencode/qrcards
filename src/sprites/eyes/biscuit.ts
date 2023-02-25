@@ -32,7 +32,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Style 9`,
+    `Biscuit`,
     definitions,
     useIds
 );

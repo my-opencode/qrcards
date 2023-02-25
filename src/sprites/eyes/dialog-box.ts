@@ -52,7 +52,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Style 5`,
+    `Dialog box`,
     definitions,
     useIds
 );

@@ -40,7 +40,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Style 7`,
+    `Clipped diagonally centered`,
     definitions,
     useIds
 );

@@ -17,7 +17,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new EyeSprites(
-    `Style 4`,
+    `Pointy toward center`,
     definitions,
     useIds
 );
