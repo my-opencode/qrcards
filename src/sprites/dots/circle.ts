@@ -42,8 +42,8 @@ export const sprites = new DotSprites(
   definitions,
   useIds
 );
-sprites.use = function(this:DotSprites,id:string, x:number, y:number,classes?:string){
+sprites.use = function(this:DotSprites, x:number, y:number,id:string,classes?:string){
   const halfStep = 5;
-  return `<use xlink:href="#dot" class="${classes||this.defaultClass}" cx="${x + halfStep}" cy="${y + halfStep}" />`;
+  return `<use xlink:href="#${this.useIds[id]||`dot`}" class="${classes||this.defaultClass}" x="${x + halfStep}" y="${y + halfStep}" />`;
 };
 

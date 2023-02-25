@@ -2,7 +2,7 @@ import { DownloadQr, GenerateAndDisplayQr } from "../_shared/singleQr.js";
 export interface IDocPointers {
   qrdata: HTMLInputElement,
   qrdisplaycontainer: SVGAElement,
-  qrdisplay: Element,
+  // qrdisplay: Element,
   qrdldbtn: Element,
   qrgenbtn: Element,
   qrlink: HTMLAnchorElement
@@ -19,14 +19,14 @@ export function init(/* window: Window, document: Document */): void {
 export function getPointers(/* document: Document */): IDocPointers {
   const qrdata = document.querySelector(`#contents #qrdata`) as HTMLInputElement;
   const qrdisplaycontainer = document.querySelector(`#contents #qrdisplaycontainer`) as unknown as SVGAElement;
-  const qrdisplay = document.querySelector(`#contents #qrdisplay`);
-  const qrdldbtn = document.querySelector('#contents #qrdldbtn');
-  const qrgenbtn = document.querySelector('#contents #qrgenbtn');
+  // const qrdisplay = document.querySelector(`#contents #qrdisplay`) as HTMLInputElement;
+  const qrdldbtn = document.querySelector('#contents #qrdldbtn') as HTMLInputElement;
+  const qrgenbtn = document.querySelector('#contents #qrgenbtn') as HTMLInputElement;
   const qrlink = document.querySelector('#contents #qrdldlink') as HTMLAnchorElement;
   return {
     qrdata,
     qrdisplaycontainer,
-    qrdisplay,
+    // qrdisplay,
     qrdldbtn,
     qrgenbtn,
     qrlink

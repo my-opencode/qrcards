@@ -1,6 +1,6 @@
 import { DotSprites } from "../DotSprites";
 
-const definitions = `<rect id="dot" x="0" y="0"  width="100" height="100"/>`;
+const definitions = `<rect id="dot" x="6.5" y="6.5" width="87" height="87"/>`;
 
 const useIds = {
   // "0----": "",
@@ -38,9 +38,14 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `Default`,
+  `Shaken squares`,
   definitions,
   useIds
 );
 
-
+sprites.use = function (this: DotSprites, x: number, y: number, id: string, classes?: string) {
+  const halfStep = 5;
+  const angleSelector = Math.trunc(Math.random()*3.999);
+  const angle = angleSelector === 0 ? 0 : angleSelector === 1 ? 10 : angleSelector === 2 ? -13 : 20;
+  return `<use xlink:href="#${this.useIds[id] || `dot`}" class="${classes || this.defaultClass}" x="${x}" y="${y}" transform="rotate(${angle} ${x+halfStep} ${y+halfStep})" />`;
+};

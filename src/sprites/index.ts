@@ -1,62 +1,106 @@
 import { ISpritesLists } from "../types";
 import { DotSprites } from "./DotSprites";
-
-import { sprites as s1 } from "./dots/circle";
-import { sprites as s2 } from "./dots/pointy-rounded";
-import { sprites as s3 } from "./dots/rounded-arc";
-import { sprites as s4 } from "./dots/rounded-straight";
-import { sprites as s5 } from "./dots/claw-rounded";
-import { sprites as s6 } from "./dots/pointy-square";
-import { sprites as s7 } from "./dots/rounded-concave-small-zero";
-import { sprites as s8 } from "./dots/sharp-rounded";
-import { sprites as s9 } from "./dots/default";
-import { sprites as s10 } from "./dots/pointy-straight";
-import { sprites as s11 } from "./dots/rounded-concave-square";
-import { sprites as s12 } from "./dots/x-line-rounded";
-import { sprites as s13 } from "./dots/pointy-concave-rounded";
-import { sprites as s14 } from "./dots/rounded";
-import { sprites as s15 } from "./dots/rounded-diagonal";
-import { sprites as s16 } from "./dots/y-line-rounded";
-const dotsprites: [string, DotSprites][] = [
-  ["default",
-    s9],
-  ["circle",
-    s1],
-  ["claw-rounded",
-    s5],
-  ["rounded",
-    s14],
-  ["rounded-arc",
-    s3],
-  ["rounded-concave-square",
-    s11],
-  ["rounded-concave-small-zero",
-    s7],
-  ["rounded-diagonal",
-    s15],
-  ["rounded-straight",
-    s4],
-  ["pointy-rounded",
-    s2],
-  ["pointy-square",
-    s6],
-  ["pointy-straight",
-    s10],
-  ["pointy-concave-rounded",
-    s13],
-  ["sharp-rounded",
-    s8],
-  ["x-line-rounded",
-    s12],
-  ["y-line-rounded",
-    s16],
-];
-import { sprites as e1 } from "./eyes/rounded";
-const eyesprites: [string, EyeSprites][] = [[`rounded`, e1]];
-import { sprites as i1 } from "./irises/rounded";
 import { EyeSprites } from "./EyeSprites";
 import { IrisSprites } from "./IrisSprites";
-const irissprites: [string, IrisSprites][] = [[`rounded`, i1]];
+
+function nameToId(n: string) {
+  const id = n.toLowerCase().replace(/\s+/g, `-`);
+  return id;
+}
+
+type IIdSpriteArr<T extends DotSprites> = [string, T, string];
+
+function toIdSpriteArr<T extends DotSprites>(sprites: T): IIdSpriteArr<T> {
+  return [nameToId(sprites.displayName), sprites, sprites.preview()];
+}
+
+import { sprites as dotSquare } from "./dots/default";
+import { sprites as dotShakenSquares } from "./dots/shaken-squares";
+import { sprites as dotSquareSmall } from "./dots/square-small";
+import { sprites as dotCircle } from "./dots/circle";
+import { sprites as dotCircleSmall } from "./dots/circle-small";
+import { sprites as dotPointyRoundedRounded } from "./dots/pointy-rounded-rounded";
+import { sprites as dotClawClawCircle } from "./dots/claw-claw-circle";
+import { sprites as dotPointySquareSquare } from "./dots/pointy-square-square";
+import { sprites as dotPointyClippedLosange } from "./dots/pointy-clipped-losange";
+import { sprites as dotXLines } from "./dots/x-line-rounded";
+import { sprites as dotPointyConcaveRounded } from "./dots/pointy-concave-rounded-circle";
+import { sprites as dotRoundedRoundedCircle } from "./dots/rounded-rounded-circle";
+import { sprites as dotYLines } from "./dots/y-line-rounded";
+
+import { sprites as eyeCircleChain } from "./eyes/circle-chain";
+import { sprites as eyeCircleChainDense } from "./eyes/circle-chain-dense";
+import { sprites as eyePointTopLeft } from "./eyes/point-top-left";
+import { sprites as eyePointyChain } from "./eyes/pointy-chain";
+import { sprites as eyeShakenSquares } from "./eyes/shaken-squares";
+import { sprites as eyePointySkewed } from "./eyes/pointy-skewed";
+import { sprites as eyePointyDiagonalCenter } from "./eyes/pointy-diagonal-center";
+import { sprites as eyeDialogBox } from "./eyes/dialog-box";
+import { sprites as eyeRoundedOutside } from "./eyes/rounded-outside";
+import { sprites as eyeClippedDiagonalCenter } from "./eyes/clipped-diagonal-center";
+import { sprites as eyeRounded } from "./eyes/rounded";
+import { sprites as eyeBiscuit } from "./eyes/biscuit";
+
+import { sprites as irisCircle } from "./irises/circle";
+import { sprites as irisConcaveSquare } from "./irises/concave-square";
+import { sprites as irisShakenSquares } from "./irises/shaken-squares";
+import { sprites as irisBiscuit } from "./irises/biscuit";
+import { sprites as irisRoundedClipped } from "./irises/rounded-clipped";
+import { sprites as irisTorn } from "./irises/torn";
+import { sprites as irisDialogBox } from "./irises/dialog-box";
+import { sprites as irisVerticalRoundedBars } from "./irises/vertical-rounded-bars";
+import { sprites as irisSkewedOutside } from "./irises/skewed-outside";
+import { sprites as irisGems } from "./irises/gems";
+import { sprites as irisNineCircles } from "./irises/nine-circles";
+import { sprites as irisRounded } from "./irises/rounded";
+import { sprites as irisRoundedOneCorner } from "./irises/rounded-one-corner";
+
+export const dotsprites: IIdSpriteArr<DotSprites>[] = [
+  toIdSpriteArr(dotSquare),
+  toIdSpriteArr(dotCircle),
+  toIdSpriteArr(dotClawClawCircle),
+  toIdSpriteArr(dotRoundedRoundedCircle),
+  toIdSpriteArr(dotCircleSmall),
+  toIdSpriteArr(dotShakenSquares),
+  toIdSpriteArr(dotPointyRoundedRounded),
+  toIdSpriteArr(dotPointySquareSquare),
+  toIdSpriteArr(dotPointyClippedLosange),
+  toIdSpriteArr(dotPointyConcaveRounded),
+  toIdSpriteArr(dotSquareSmall),
+  toIdSpriteArr(dotXLines),
+  toIdSpriteArr(dotYLines),
+];
+
+export const eyesprites: IIdSpriteArr<EyeSprites>[] = [
+  toIdSpriteArr(eyeRounded),
+  toIdSpriteArr(eyeRoundedOutside),
+  toIdSpriteArr(eyeShakenSquares),
+  toIdSpriteArr(eyeBiscuit),
+  toIdSpriteArr(eyePointySkewed),
+  toIdSpriteArr(eyeCircleChain),
+  toIdSpriteArr(eyeClippedDiagonalCenter),
+  toIdSpriteArr(eyePointyDiagonalCenter),
+  toIdSpriteArr(eyeDialogBox),
+  toIdSpriteArr(eyeCircleChainDense),
+  toIdSpriteArr(eyePointTopLeft),
+  toIdSpriteArr(eyePointyChain),
+];
+
+export const irissprites: IIdSpriteArr<IrisSprites>[] = [
+  toIdSpriteArr(irisRounded),
+  toIdSpriteArr(irisRoundedOneCorner),
+  toIdSpriteArr(irisShakenSquares),
+  toIdSpriteArr(irisBiscuit),
+  toIdSpriteArr(irisSkewedOutside),
+  toIdSpriteArr(irisNineCircles),
+  toIdSpriteArr(irisRoundedClipped),
+  toIdSpriteArr(irisGems),
+  toIdSpriteArr(irisDialogBox),
+  toIdSpriteArr(irisConcaveSquare),
+  toIdSpriteArr(irisTorn),
+  toIdSpriteArr(irisVerticalRoundedBars),
+  toIdSpriteArr(irisCircle),
+];
 
 // export async function getSprites(dir: string): Promise<ISpriteListItem[]> {
 //   const files = await fs.readdir(dir);
@@ -83,10 +127,10 @@ const irissprites: [string, IrisSprites][] = [[`rounded`, i1]];
 //   return getSprites(`irises`);
 // }
 
-export function listAllSpritesHandler(event: Event): ISpritesLists {
-  const dots = dotsprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
-  const eyes = eyesprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
-  const irises = irissprites.map(([id, sprites]) => ({ id, displayName: sprites.displayName }));
+export function listAllSpritesHandler(event?: Event): ISpritesLists {
+  const dots = dotsprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
+  const eyes = eyesprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
+  const irises = irissprites.map(([id, sprites, preview]) => ({ id, displayName: sprites.displayName, preview }));
   return { dots, eyes, irises };
 }
 
