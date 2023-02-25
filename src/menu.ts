@@ -48,7 +48,7 @@ function buildMenuTemplate(win: BrowserWindow) {
           await appDataLoad();
           win.webContents.send('appDataReloaded');
         },
-        accelerator: `O`
+        accelerator: `Ctrl+O`
       }),
       new MenuItem({
         label: `Save`,
@@ -57,14 +57,14 @@ function buildMenuTemplate(win: BrowserWindow) {
             win.webContents.send('appDataSave');
           else appDataSave();
         },
-        accelerator: `S`
+        accelerator: `Ctrl+S`
       }),
       new MenuItem({
         type: `separator`
       }),
       new MenuItem({
         role: isMac ? `close` : `quit`,
-        accelerator: `Q`
+        accelerator: `Ctrl+Q`
       }),
     ])
   }));
@@ -75,7 +75,7 @@ function buildMenuTemplate(win: BrowserWindow) {
       new MenuItem({
         label: `Style`,
         click: () => { win.webContents.send('page-go-to', `styler`); },
-        accelerator: `Y`
+        accelerator: `Alt+Y`
       })
     ])
   }));
@@ -86,17 +86,17 @@ function buildMenuTemplate(win: BrowserWindow) {
       new MenuItem({
         label: `Simple QR`,
         click: () => { win.webContents.send('page-go-to', `plaintext`); },
-        accelerator:`1`
+        accelerator:`Alt+1`
       }),
       new MenuItem({
         label: `Single Vcard Qr`,
         click: () => { win.webContents.send('page-go-to', `vcard`); },
-        accelerator: `2`
+        accelerator: `Alt+2`
       }),
       new MenuItem({
         label: `Batch Vcard Qrs`,
         click: () => { win.webContents.send('page-go-to', `vcards`); },
-        accelerator: `3`
+        accelerator: `Alt+3`
       }),
       new MenuItem({
         type: `separator`
