@@ -22,7 +22,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new IrisSprites(
-    `Style 4`,
+    `Rounded diagonally clipped`,
     definitions,
     useIds
 );

@@ -18,7 +18,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new IrisSprites(
-    `Style 7`,
+    `Vertical rounded Bars`,
     definitions,
     useIds
 );

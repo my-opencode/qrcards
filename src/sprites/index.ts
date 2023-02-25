@@ -37,20 +37,19 @@ import { sprites as e10 } from "./eyes/style-7";
 import { sprites as e11 } from "./eyes/style-8";
 import { sprites as e12 } from "./eyes/style-9";
 
-import { sprites as i1 } from "./irises/circle";
-import { sprites as i2 } from "./irises/shaken-squares";
-import { sprites as i3 } from "./irises/iris-10";
-import { sprites as i4 } from "./irises/nine-circle";
-import { sprites as i5 } from "./irises/iris-3";
-import { sprites as i6 } from "./irises/iris-4";
-import { sprites as i7 } from "./irises/iris-5";
-import { sprites as i8 } from "./irises/iris-6";
-import { sprites as i9 } from "./irises/iris-7";
-import { sprites as i10 } from "./irises/iris-8";
-import { sprites as i11 } from "./irises/iris-9";
-import { sprites as i12 } from "./irises/nine-circles";
-import { sprites as i13 } from "./irises/rounded";
-import { sprites as i14 } from "./irises/rounded-one-corner";
+import { sprites as irisCircle } from "./irises/circle";
+import { sprites as irisConcaveSquare } from "./irises/concave-square";
+import { sprites as irisShakenSquares } from "./irises/shaken-squares";
+import { sprites as irisBiscuit } from "./irises/biscuit";
+import { sprites as irisRoundedClipped } from "./irises/rounded-clipped";
+import { sprites as irisTorn } from "./irises/torn";
+import { sprites as irisDialogBox } from "./irises/dialog-box";
+import { sprites as irisVerticalRoundedBars } from "./irises/vertical-rounded-bars";
+import { sprites as irisSkewedOutside } from "./irises/skewed-outside";
+import { sprites as irisGems } from "./irises/gems";
+import { sprites as irisNineCircles } from "./irises/nine-circles";
+import { sprites as irisRounded } from "./irises/rounded";
+import { sprites as irisRoundedOneCorner } from "./irises/rounded-one-corner";
 
 export const dotsprites: [string, DotSprites][] = [
   ["default",
@@ -101,24 +100,22 @@ export const eyesprites: [string, EyeSprites][] = [
   [nameToId(e11.displayName), e11],
   [nameToId(e12.displayName), e12],
 ];
-import { EyeSprites } from "./EyeSprites";
+
 import { IrisSprites } from "./IrisSprites";
 export const irissprites: [string, IrisSprites][] = [
-
-  [nameToId(i1.displayName), i1],
-  [nameToId(i2.displayName), i2],
-  [nameToId(i3.displayName), i3],
-  [nameToId(i4.displayName), i4],
-  [nameToId(i5.displayName), i5],
-  [nameToId(i6.displayName), i6],
-  [nameToId(i7.displayName), i7],
-  [nameToId(i8.displayName), i8],
-  [nameToId(i9.displayName), i9],
-  [nameToId(i10.displayName), i10],
-  [nameToId(i11.displayName), i11],
-  [nameToId(i12.displayName), i12],
-  [nameToId(i13.displayName), i13],
-  [nameToId(i14.displayName), i14],
+  [nameToId(irisCircle.displayName), irisCircle],
+  [nameToId(irisRoundedOneCorner.displayName), irisRoundedOneCorner],
+  [nameToId(irisShakenSquares.displayName), irisShakenSquares],
+  [nameToId(irisBiscuit.displayName), irisBiscuit],
+  [nameToId(irisSkewedOutside.displayName), irisSkewedOutside],
+  [nameToId(irisNineCircles.displayName), irisNineCircles],
+  [nameToId(irisRoundedClipped.displayName), irisRoundedClipped],
+  [nameToId(irisGems.displayName), irisGems],
+  [nameToId(irisConcaveSquare.displayName), irisConcaveSquare],
+  [nameToId(irisTorn.displayName), irisTorn],
+  [nameToId(irisDialogBox.displayName), irisDialogBox],
+  [nameToId(irisVerticalRoundedBars.displayName), irisVerticalRoundedBars],
+  [nameToId(irisRounded.displayName), irisRounded],
 ];
 
 // export async function getSprites(dir: string): Promise<ISpriteListItem[]> {

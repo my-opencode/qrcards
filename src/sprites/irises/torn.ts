@@ -28,7 +28,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new IrisSprites(
-    `Style 5`,
+    `Torn`,
     definitions,
     useIds
 );

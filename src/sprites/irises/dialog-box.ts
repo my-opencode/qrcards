@@ -30,7 +30,7 @@ const useIds: IEyePosObj = {
 };
 
 export const sprites = new IrisSprites(
-    `Style 6`,
+    `Dialog Box`,
     definitions,
     useIds
 );
