@@ -206,7 +206,7 @@ function addEyeIrisFromSprites(svg: string, x:Offsetter, y:Offsetter, height: nu
     console.log(`called`, applicationData.style.spritesEyes,applicationData.style.spritesIrises);
     const eyePositionNames = [`topleft`, `topright`, `bottomleft`];
     const eyePositions: [number,number][] = [[0, 0], [width - 7, 0], [0, height - 7]].map(c=>[x(c[0]),y(c[1])]);
-    const irisPositions: [number,number][] = [[2,2], [width - 5, 2], [0, height - 5]].map(c=>[x(c[0]),y(c[1])]);
+    const irisPositions: [number,number][] = [[2,2], [width - 5, 2], [2, height - 5]].map(c=>[x(c[0]),y(c[1])]);
     if (applicationData.style.spritesIrises && applicationData.style.spritesIrises !== `default`) {
         const s = irissprites.find(es => es[0] === applicationData.style.spritesIrises)?.[1];
         console.log(applicationData.style.spritesIrises, eyesprites.map(esa=>esa[0]).join(``), s);
