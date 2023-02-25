@@ -45,4 +45,4 @@ const useIds = {
   "1-rbl": "threeFourTbRl",
   "1trbl": "threeFourTbRl",
 };
-export const sprites = new DotSprites(`Pointy square`,definitions, useIds);
+export const sprites = new DotSprites(`Pointy straight`,definitions, useIds);

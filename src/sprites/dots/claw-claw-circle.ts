@@ -47,7 +47,7 @@ const useIds = {
 };
 
 export const sprites = new DotSprites(
-  `Rounded claws`,
+  `End: claws, Corner: claws, Dot: circle`,
   definitions,
   useIds
 );
