@@ -39,12 +39,16 @@ export interface IApplicationDataStyle {
     colorDot?: string;
     colorEye?: string;
     colorIris?: string;
+    colorText?: string;
     spritesDots?: string;
     spritesEyes?: string;
     spritesIrises?: string;
     logo?: string;
     logoHeight?: number;
     logoWidth?: number;
+    textFont?: "serif"|"sans-serif";
+    textSize?: number;
+    textDisabled?: boolean;
 }
 
 export interface IApplicationData {
