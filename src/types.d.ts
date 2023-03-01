@@ -31,6 +31,7 @@ export interface IVcardEmployeeForm {
     suffix?: string;
     fullname: string;
     title?: string;
+    displayName?: string
 }
 export type IVcardForm = IVcardCompanyForm & IVcardEmployeeForm;
 
