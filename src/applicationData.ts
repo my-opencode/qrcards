@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { IApplicationData, IApplicationDataUpdate } from "./types";
+import { IApplicationData, IApplicationDataUpdate, IVcardCompanyForm, IVcardEmployeeForm, IVcardForm } from "./types";
 import { dialog } from "electron";
 
 const defaultCompanyFormFields:(keyof IVcardCompanyForm)[] = [
