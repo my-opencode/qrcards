@@ -3,6 +3,7 @@ import { getPointers } from "./pointers.js";
 import { vcardsAddDataRow } from "./dataRow.js";
 import { getInputValue, setInputValue } from "../_shared/inputs.js";
 import { svgToPng, getBase64String } from "../_shared/image.js";
+import { getDisplayNameFromFormData } from "../_shared/vcard.js";
 
 interface IRowVcardForm extends IVcardForm {
   rowi: string;
@@ -101,7 +102,7 @@ function getVcardsFormData(appData: IApplicationData): IRowVcardForm[] {
   return data;
 }
 
-async function generateAndStoreQr(rowi: string, data: string) {
+async function generateAndStoreQr(rowi: string, data: string, displayName?: string) {
   console.log(`gen and store qr`);
   const qrdisplaycontainer = document.querySelector(`#contents #qr-${rowi}`);
   if (!qrdisplaycontainer) {
@@ -112,7 +113,7 @@ async function generateAndStoreQr(rowi: string, data: string) {
 
   // qrdisplay.innerHTML = ``;
   qrdisplaycontainer.innerHTML = ``;
-  const { svg/* , width, height */ } = await window.qrapi.qrcodesvg(data);
+  const { svg/* , width, height */ } = await window.qrapi.qrcodesvg(data,undefined,{displayName});
   // console.log(`qrcodesvg returned ${width} & ${height}`);
   // qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
   // qrdisplay.innerHTML = svg;
@@ -127,7 +128,7 @@ async function vcardsGenHandler() {
   const formObjects = getVcardsFormData(appData);
   for (const o of formObjects) {
     const vcard = await window.vcardapi.vcard(o);
-    generateAndStoreQr(o.rowi, vcard);
+    generateAndStoreQr(o.rowi, vcard, getDisplayNameFromFormData(o));
   }
 }
 

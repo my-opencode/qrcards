@@ -331,6 +331,7 @@
               <td>Work Phone:</td>
               <td>Work Mobile:</td>
               <td>Personal Mobile:</td>
+              <td>Card Display Name:</td>
               <td>Actions</td>
             </thead>
           </table>
@@ -395,6 +396,48 @@
             />
             <label for="qrstyleiriscolor">Eye Iris Color</label>
           </div>
+        </details>
+        <!-- Text -->
+        <details open>
+          <summary>
+            Vcard text
+            <button id="qrstyletextsavebtn" disabled>Save text style</button>
+          </summary>
+          <input
+            type="checkbox"
+            name="qrstyletextdisabled"
+            id="qrstyletextdisabled"
+          />
+          <label for="qrstyletextdisabled">Disable text on vcard</label>
+          <br />
+          <input
+            type="color"
+            name="qrstyletextcolor"
+            id="qrstyletextcolor"
+            value="#000000"
+          />
+          <label for="qrstyletextcolor">Color of the vcard text</label>
+          <br />
+          <input
+            type="number"
+            name="qrstyletextsize"
+            id="qrstyletextsize"    
+            value="50"      />
+          <label for="qrstyletextsize"
+            >Size of the vcard text (pixels)</label
+          >
+          <br />
+          <select
+            name="qrstyletextfont"
+            id="qrstyletextfont"    
+            >
+            <option value="serif"><span style="font-family:serif;"></span> Serif</option>
+            <option value="sans-serif"><span style="font-family:sans-serif;"></span>Sans-Serif</option>
+          </select>
+          <label for="qrstyletextfont"
+            >Font of the vcard text</label
+          >
+          <br />
         </details>
         <!-- Logo -->
         <details>

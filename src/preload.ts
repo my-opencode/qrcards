@@ -1,10 +1,10 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { QRCodeOptions } from "qrcode";
-import { IApplicationDataUpdate, IImgFileDesc, IVcardForm } from "./types";
+import { IApplicationDataUpdate, IImgFileDesc, IVcardForm, IQrSvgOptions } from "./types";
 
 contextBridge.exposeInMainWorld('qrapi', {
     qrcode: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcode', data, o),
-    qrcodesvg: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcodesvg', data, o),
+    qrcodesvg: (data: string, o?: QRCodeOptions, o2?:IQrSvgOptions) => ipcRenderer.invoke('qrcodesvg', data, o, o2),
 });
 contextBridge.exposeInMainWorld('vcardapi', {
     vcard: (formObj: IVcardForm) => ipcRenderer.invoke('vcard', formObj),

@@ -1,10 +1,13 @@
 import * as QRCode from "qrcode";
 import { applicationData } from "../applicationData";
 import { dotsprites, eyesprites, irissprites } from "../sprites/index";
+import { IQrSvgOptions } from "../types";
+const defaultTextSize = 50;
+const defaultTextColor = `#000000`;
 type DataArray = (1 | 0)[][];
 type Offsetter = (n: number) => number;
 
-export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number, width: number } {
+export function qrobjToSvg(qrcode: QRCode.QRCode, options?: IQrSvgOptions): { svg: string, height: number, width: number } {
     // known constants
     const dotSize = 10;
     const marginSize = 2 * dotSize;
@@ -12,7 +15,7 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
     const { dataArr, size, w } = bufferToDataArr(qrcode);
     // height & width
     const width = 2 * marginSize + w * dotSize;
-    const height = width; // + text height;
+    const height = width + (options?.displayName ? defaultTextSize+20 : 0); // + text height;
     // offsetters
     const x = (coli: number) => marginSize + (coli * dotSize);
     const y = (rowi: number) => marginSize + (rowi * dotSize);
@@ -31,6 +34,7 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
     svg = addBg(svg, width, height);
     svg = plotDots(svg, width, height, dataArr, size, w, x, y);
     svg = addLogo(svg, width, height);
+    if (options?.displayName) svg = addDisplayName(svg, width, height, options.displayName);
     // close svg
     svg += `
 </svg>`;
@@ -38,7 +42,7 @@ export function qrobjToSvg(qrcode: QRCode.QRCode): { svg: string, height: number
     return { svg, height, width };
 }
 
-export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOptions): ReturnType<typeof qrobjToSvg> {
+export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOptions, o2?:IQrSvgOptions): ReturnType<typeof qrobjToSvg> {
     console.log(`create qr code for`, data);
     // QRCode.toFile(`./test.png`, data);
     if (applicationData.style.logo) {
@@ -46,7 +50,7 @@ export function qrobjToSvgHandler(event: Event, data: string, o: QRCode.QRCodeOp
         o.errorCorrectionLevel = `Q`;
     }
     const qrobj = QRCode.create(data, o);
-    const { svg, height, width } = qrobjToSvg(qrobj);
+    const { svg, height, width } = qrobjToSvg(qrobj,o2);
     return {
         svg,
         height,
@@ -202,26 +206,26 @@ function bufferToDataArr(qrObject: QRCode.QRCode) {
     }
     return { dataArr, w, size };
 }
-function addEyeIrisFromSprites(svg: string, x:Offsetter, y:Offsetter, height: number, width: number) {
-    console.log(`called`, applicationData.style.spritesEyes,applicationData.style.spritesIrises);
+function addEyeIrisFromSprites(svg: string, x: Offsetter, y: Offsetter, height: number, width: number) {
+    // console.log(`called`, applicationData.style.spritesEyes, applicationData.style.spritesIrises);
     const eyePositionNames = [`topleft`, `topright`, `bottomleft`];
-    const eyePositions: [number,number][] = [[0, 0], [width - 7, 0], [0, height - 7]].map(c=>[x(c[0]),y(c[1])]);
-    const irisPositions: [number,number][] = [[2,2], [width - 5, 2], [2, height - 5]].map(c=>[x(c[0]),y(c[1])]);
+    const eyePositions: [number, number][] = [[0, 0], [width - 7, 0], [0, height - 7]].map(c => [x(c[0]), y(c[1])]);
+    const irisPositions: [number, number][] = [[2, 2], [width - 5, 2], [2, height - 5]].map(c => [x(c[0]), y(c[1])]);
     if (applicationData.style.spritesIrises && applicationData.style.spritesIrises !== `default`) {
         const s = irissprites.find(es => es[0] === applicationData.style.spritesIrises)?.[1];
-        console.log(applicationData.style.spritesIrises, eyesprites.map(esa=>esa[0]).join(``), s);
+        // console.log(applicationData.style.spritesIrises, eyesprites.map(esa => esa[0]).join(``), s);
         if (s)
-            eyePositionNames.forEach((p,i) => svg += s.use(...irisPositions[i], p));
+            eyePositionNames.forEach((p, i) => svg += s.use(...irisPositions[i], p, `qriris`));
     }
     if (applicationData.style.spritesEyes && applicationData.style.spritesEyes !== `default`) {
         const s = eyesprites.find(es => es[0] === applicationData.style.spritesEyes)?.[1];
         if (s)
-            eyePositionNames.forEach((p,i) => svg += s.use(...eyePositions[i], p));
+            eyePositionNames.forEach((p, i) => svg += s.use(...eyePositions[i], p, `qreye`));
     }
     return svg;
 }
 function addStyle(svg: string) {
-    const { colorBg, colorDot, colorEye, colorIris } = applicationData.style;
+    const { colorBg, colorDot, colorEye, colorIris, colorText, textFont, textSize } = applicationData.style;
     svg += `
     <style>
         <![CDATA[
@@ -237,8 +241,9 @@ function addStyle(svg: string) {
             ${!colorIris ? `` : `.qriris {
                 fill: ${colorIris};
             }` }
-            .qrtext {
-                color: ${colorDot || `#000000`};
+            .qrname {
+                fill: ${colorText || colorDot || defaultTextColor};
+                font: ${textSize || defaultTextSize}px ${textFont || `sans-serif`};
             }
         ]]>
     </style>`;
@@ -260,6 +265,14 @@ function plotDots(svg: string, width: number, height: number, dataArr: DataArray
     if (spritesOn)
         svg = addEyeIrisFromSprites(svg, x, y, dataArr.length, dataArr[0].length);
     svg += `
+    </g>`;
+    return svg;
+}
+
+function addDisplayName(svg:string, width:number, height:number, name?: string):string{
+    svg += `
+    <g id="name">
+        <text class="qrname" text-anchor="middle" x="${Math.round(width/2)}" y="${height-20}">${name || "Qr Name Card"}</text>
     </g>`;
     return svg;
 }

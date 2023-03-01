@@ -1,5 +1,6 @@
 import { DownloadQr, GenerateAndDisplayQr } from "../_shared/singleQr.js";
 import { getInputValue } from "../_shared/inputs.js";
+import { getDisplayNameFromFormData } from "../_shared/vcard.js";
 interface baseObj { [key: string]: string|undefined }
 interface IVcardForm extends baseObj {
   timezone?: string;
@@ -113,6 +114,9 @@ function getVcardFormData(): IVcardForm {
 }
 
 async function vcardGenHandler() {
+  const formData = getVcardFormData();
   const vcard = await window.vcardapi.vcard(getVcardFormData());
-  GenerateAndDisplayQr(getPointers())(undefined, vcard);
+  const displayName = getDisplayNameFromFormData(formData);
+  console.log(`requesting qrcard gen with display name "${displayName}"`);
+  GenerateAndDisplayQr(getPointers())(undefined, vcard, undefined, {displayName});
 }
