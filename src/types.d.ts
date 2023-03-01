@@ -95,6 +95,9 @@ export interface ISpritesLists {
     eyes: ISpriteListItem[],
     irises: ISpriteListItem[],
 }
+export interface IQrSvgOptions {
+    displayName?: string;
+}
 
 declare global {
     interface Window {
