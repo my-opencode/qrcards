@@ -1,3 +1,5 @@
+import { QRCodeOptions } from "qrcode";
+import { IQrSvgOptions } from "../../../types.js";
 import { IDocPointers as IPlaintextDocPointers } from "../plaintext/index.js";
 import { IDocPointers as IVcardDocPointers } from "../vcard/index.js";
 import { svgToPng } from "./image.js";
@@ -6,7 +8,7 @@ export function GenerateAndDisplayQr(
   /* window: Window, */
   pointers: IPlaintextDocPointers | IVcardDocPointers
 ) {
-  return async function generateAndDisplayQr(event?:Event,data?: string): Promise<void> {
+  return async function generateAndDisplayQr(event?:Event,data?: string, o?:QRCodeOptions, o2?:IQrSvgOptions): Promise<void> {
     console.log(`gen and display qr`);
     const { qrdata, /* qrdisplay, */ qrdisplaycontainer, qrdldbtn } = pointers;
     if (!data && !qrdata?.value) {
@@ -14,7 +16,7 @@ export function GenerateAndDisplayQr(
       return;
     }
     // qrdisplay.innerHTML = ``;
-    const { svg/* , width, height */ } = await window.qrapi.qrcodesvg(data || qrdata.value);
+    const { svg/* , width, height */ } = await window.qrapi.qrcodesvg(data || qrdata.value, o, o2);
     // console.log(`qrcodesvg returned ${width} & ${height}`);
     // qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
     // qrdisplay.innerHTML = svg;
