@@ -103,7 +103,7 @@ declare global {
     interface Window {
         qrapi: {
             qrcode(data: string, o?: QRCodeOptions): Promise<string>;
-            qrcodesvg(data: string, o?: QRCodeOptions): Promise<{ svg: string, height: number; width: number }>;
+            qrcodesvg(data: string, o?: QRCodeOptions, o2?:IQrSvgOptions): Promise<{ svg: string, height: number; width: number }>;
         };
         vcardapi: {
             vcard(formObj: IVcardForm): Promise<string>;
