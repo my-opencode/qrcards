@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' blob: data:; script-src 'self' 'unsafe-inline'"
+      content="default-src 'self'; img-src 'self' blob: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
     />
     <title>QrCards</title>
   </head>
@@ -33,7 +33,8 @@
             autofocus
           ></textarea>
           <button name="qrgenbtn" id="qrgenbtn">Generate Qr Code</button>
-          <svg
+          <div id="qrdisplaycontainer"></div>
+          <!-- <svg
             xmlns="http://www.w3.org/2000/svg"
             id="qrdisplaycontainer"
             height="200"
@@ -43,7 +44,7 @@
               <rect id="dot" width="10" height="10"></rect>
             </defs>
             <g id="qrdisplay"></g>
-          </svg>
+          </svg> -->
           <button name="qrdldbtn" id="qrdldbtn" disabled>
             Download Qr Code
           </button>
@@ -206,7 +207,8 @@
           <button name="vcardqrgenbtn" id="vcardqrgenbtn">
             Generate Vcard Qr Code
           </button>
-          <svg
+          <div id="qrdisplaycontainer"></div>
+          <!-- <svg
             xmlns="http://www.w3.org/2000/svg"
             id="qrdisplaycontainer"
             height="200"
@@ -216,7 +218,7 @@
               <rect id="dot" width="10" height="10"></rect>
             </defs>
             <g id="qrdisplay"></g>
-          </svg>
+          </svg> -->
           <button name="qrdldbtn" id="qrdldbtn" disabled>
             Download Qr Code
           </button>
@@ -329,6 +331,7 @@
               <td>Work Phone:</td>
               <td>Work Mobile:</td>
               <td>Personal Mobile:</td>
+              <td>Card Display Name:</td>
               <td>Actions</td>
             </thead>
           </table>
@@ -394,6 +397,48 @@
             <label for="qrstyleiriscolor">Eye Iris Color</label>
           </div>
         </details>
+        <!-- Text -->
+        <details open>
+          <summary>
+            Vcard text
+            <button id="qrstyletextsavebtn" disabled>Save text style</button>
+          </summary>
+          <input
+            type="checkbox"
+            name="qrstyletextdisabled"
+            id="qrstyletextdisabled"
+          />
+          <label for="qrstyletextdisabled">Disable text on vcard</label>
+          <br />
+          <input
+            type="color"
+            name="qrstyletextcolor"
+            id="qrstyletextcolor"
+            value="#000000"
+          />
+          <label for="qrstyletextcolor">Color of the vcard text</label>
+          <br />
+          <input
+            type="number"
+            name="qrstyletextsize"
+            id="qrstyletextsize"    
+            value="50"      />
+          <label for="qrstyletextsize"
+            >Size of the vcard text (pixels)</label
+          >
+          <br />
+          <select
+            name="qrstyletextfont"
+            id="qrstyletextfont"    
+            >
+            <option value="serif"><span style="font-family:serif;"></span> Serif</option>
+            <option value="sans-serif"><span style="font-family:sans-serif;"></span>Sans-Serif</option>
+          </select>
+          <label for="qrstyletextfont"
+            >Font of the vcard text</label
+          >
+          <br />
+        </details>
         <!-- Logo -->
         <details>
           <summary>
@@ -404,100 +449,25 @@
           <div id="qrstylelogopreview" class="placeholder"></div>
           <input type="hidden" name="qrstylelogourl" id="qrstylelogourl" />
           <button name="qrstylelogo" id="qrstylelogo">Upload Logo</button>
-          <button name="qrstylelogoremove" id="qrstylelogoremove">Remove Logo</button>
+          <button name="qrstylelogoremove" id="qrstylelogoremove">
+            Remove Logo
+          </button>
         </details>
+        <!-- Sprites -->
         <details>
           <summary>
-            <span class="txt-warning">[Coming Soon]</span> Design
+            Design
             <button id="qrstyledesignsavebtn" disabled>Save changes</button>
           </summary>
           <!-- Dots -->
           <h3>Dot Style</h3>
-          <div class="qrstyledotstyleselect radio-sprites">
-            <label>
-              <input
-                type="radio"
-                name="dotstyle"
-                value="default"
-                class="no-display"
-                checked="checked"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Default</span>
-              </div>
-            </label>
-            <!-- <label>
-              <input
-                type="radio"
-                name="dotstyle"
-                value="abc"
-                class="no-display"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Style abc</span>
-              </div>
-            </label> -->
-          </div>
+          <div id="qrstyledotstyleselect" class="radio-sprites"></div>
           <!-- Eyes -->
           <h3>Eye Style</h3>
-          <div class="qrstyleeyestyleselect radio-sprites">
-            <label>
-              <input
-                type="radio"
-                name="eyestyle"
-                value="default"
-                class="no-display"
-                checked="checked"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Default</span>
-              </div>
-            </label>
-            <!-- <label>
-              <input
-                type="radio"
-                name="eyestyle"
-                value="efg"
-                class="no-display"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Style EFG</span>
-              </div>
-            </label> -->
-          </div>
+          <div id="qrstyleeyestyleselect" class="radio-sprites"></div>
           <!-- Iriss -->
           <h3>Iris Style</h3>
-          <div class="qrstyleirisstyleselect radio-sprites">
-            <label>
-              <input
-                type="radio"
-                name="irisstyle"
-                value="default"
-                class="no-display"
-                checked="checked"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Default</span>
-              </div>
-            </label>
-            <!-- <label>
-              <input
-                type="radio"
-                name="irisstyle"
-                value="hij"
-                class="no-display"
-              />
-              <div class="radio-selector">
-                <div class="sprite-preview"></div>
-                <span class="txt-center">Style HIJ</span>
-              </div>
-            </label> -->
-          </div>
+          <div id="qrstyleirisstyleselect" class="radio-sprites"></div>
         </details>
       </div>
     </template>

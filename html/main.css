@@ -27,6 +27,12 @@ body {
   background-color: lightgray;
 }
 
+.radio-sprites .radio-selector {
+  width: 70px;
+  height: 70px;
+  margin-left: 5px;
+}
+
 .radio-sprites .radio-selector .sprite-preview {
   width: 60px;
   height: 60px;
@@ -42,6 +48,9 @@ body {
 .radio-sprites [type=radio]:checked~.radio-selector .sprite-preview {
   border: 5px blue solid;
   margin: 0;
+}
+.radio-sprites [type=radio]:checked~.radio-selector span {
+  font-weight: bold;
 }
 
 summary {

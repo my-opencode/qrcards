@@ -31,6 +31,7 @@ export interface IVcardEmployeeForm {
     suffix?: string;
     fullname: string;
     title?: string;
+    cardDisplayName?: string
 }
 export type IVcardForm = IVcardCompanyForm & IVcardEmployeeForm;
 
@@ -39,12 +40,16 @@ export interface IApplicationDataStyle {
     colorDot?: string;
     colorEye?: string;
     colorIris?: string;
+    colorText?: string;
     spritesDots?: string;
     spritesEyes?: string;
-    spritesIriss?: string;
+    spritesIrises?: string;
     logo?: string;
     logoHeight?: number;
     logoWidth?: number;
+    textFont?: "serif"|"sans-serif";
+    textSize?: number;
+    textDisabled?: boolean;
 }
 
 export interface IApplicationData {
@@ -79,11 +84,27 @@ export interface IUploadedImage {
     name: string;
 }
 
+export interface ISpriteListItem {
+    id: string,
+    displayName: string;
+    preview: string
+    // sprites: Sprites | DotSprites | EyeSprites | IrisSprites
+}
+
+export interface ISpritesLists {
+    dots: ISpriteListItem[],
+    eyes: ISpriteListItem[],
+    irises: ISpriteListItem[],
+}
+export interface IQrSvgOptions {
+    displayName?: string;
+}
+
 declare global {
     interface Window {
         qrapi: {
             qrcode(data: string, o?: QRCodeOptions): Promise<string>;
-            qrcodesvg(data: string, o?: QRCodeOptions): Promise<{ svg: string, height: number; width: number }>;
+            qrcodesvg(data: string, o?: QRCodeOptions, o2?:IQrSvgOptions): Promise<{ svg: string, height: number; width: number }>;
         };
         vcardapi: {
             vcard(formObj: IVcardForm): Promise<string>;
@@ -98,7 +119,7 @@ declare global {
             saveappdata(): Promise<void>;
             handleMenuAppDataLoaded(callback: () => void): void;
             handleMenuAppDataSave(callback: () => void): void;
-            styleremovelogo():Promise<void>;
+            styleremovelogo(): Promise<void>;
         };
         pageapi: {
             pageChanged: (pageName: string) => void,
@@ -107,6 +128,9 @@ declare global {
         imageapi: {
             uploadimage: () => Promise<IUploadedImage>,
         };
+        spriteapi: {
+            listsprites: () => Promise<ISpritesLists>
+        }
         applyData(): Promise<void>;
         userMessage(txt: string): void;
     }

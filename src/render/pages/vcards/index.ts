@@ -3,6 +3,7 @@ import { getPointers } from "./pointers.js";
 import { vcardsAddDataRow } from "./dataRow.js";
 import { getInputValue, setInputValue } from "../_shared/inputs.js";
 import { svgToPng, getBase64String } from "../_shared/image.js";
+import { getDisplayNameFromFormData } from "../_shared/vcard.js";
 
 interface IRowVcardForm extends IVcardForm {
   rowi: string;
@@ -39,7 +40,7 @@ export function addPageEventListeners(): void {
 
 function vcardsHandlerSelectDeselectAll() {
   const { vcardsSelectAll } = getPointers(/* document */);
-  Array.from(document.querySelectorAll(`#contents .data-row-selector`))
+  Array.from(document.querySelectorAll(`#contents .data-row-selector`) as NodeListOf<HTMLInputElement>)
     .forEach((cb: HTMLInputElement) => cb.checked = vcardsSelectAll.checked);
 }
 
@@ -59,21 +60,21 @@ function getVcardsEmployeesFormData<B extends true | false | undefined>(appData:
   const resultVEF: IVcardEmployeeForm[] = [];
   const resultRVEF: IRowVcardEmployeeForm[] = [];
   const datarows = Array.from(document.querySelectorAll(`#contents .data-row-selector`)) as HTMLElement[];
-  const requiredFields = appData.vcard_required_fields
-    .filter(fieldName => appData.employee_form_fields.includes(fieldName as unknown as keyof IVcardEmployeeForm));
+  const requiredFields: (keyof IVcardEmployeeForm)[] = [];
+  for (const fieldName of appData.vcard_required_fields)
+    if (appData.employee_form_fields.includes(fieldName as unknown as keyof IVcardEmployeeForm))
+      requiredFields.push(fieldName as keyof IVcardEmployeeForm);
   for (const datarow of datarows) {
     const rowi = datarow.dataset.row;
     const getVcInputValue = (fieldName: string) => getInputValue(`vc-${rowi}-${fieldName}`);
     const employeeData = appData.employee_form_fields.reduce((o: IVcardEmployeeForm, fieldName: keyof IVcardEmployeeForm) => {
-      o[fieldName] = getVcInputValue(fieldName);
+      o[fieldName] = getVcInputValue(fieldName) || ``;
       return o;
     }, {} as IVcardEmployeeForm);
 
-    if (requiredFields
-      .some((fieldName: keyof IVcardEmployeeForm) => !employeeData[fieldName])
-    ) {
+    if (requiredFields.some((fieldName) => !employeeData[fieldName])) {
       window.userMessage(`Employee ${rowi} form incomplete: Missing ${requiredFields
-        .filter((fieldName: keyof IVcardEmployeeForm) => !employeeData[fieldName])
+        .filter((fieldName) => !employeeData[fieldName])
         .join(`, `)
         } `);
       throw new TypeError(`Employee ${rowi} vcard form Incomplete`);
@@ -101,17 +102,22 @@ function getVcardsFormData(appData: IApplicationData): IRowVcardForm[] {
   return data;
 }
 
-async function generateAndStoreQr(rowi: string, data: string) {
+async function generateAndStoreQr(rowi: string, data: string, displayName?: string) {
   console.log(`gen and store qr`);
   const qrdisplaycontainer = document.querySelector(`#contents #qr-${rowi}`);
-  const qrdisplay = document.querySelector(`#contents #qrdisplay-${rowi}`);
+  if (!qrdisplaycontainer) {
+    throw new Error(`Qr container for row ${rowi} not found.`);
+  }
+  // const qrdisplay = document.querySelector(`#contents #qrdisplay-${rowi}`);
   const { vcardsDldBtn } = getPointers(/* document */);
 
-  qrdisplay.innerHTML = ``;
-  const { svg, width, height } = await window.qrapi.qrcodesvg(data);
+  // qrdisplay.innerHTML = ``;
+  qrdisplaycontainer.innerHTML = ``;
+  const { svg/* , width, height */ } = await window.qrapi.qrcodesvg(data,undefined,{displayName});
   // console.log(`qrcodesvg returned ${width} & ${height}`);
-  qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
-  qrdisplay.innerHTML = svg;
+  // qrdisplaycontainer.setAttribute(`viewBox`, `0 0 ${width} ${height}`);
+  // qrdisplay.innerHTML = svg;
+  qrdisplaycontainer.innerHTML = svg;
   // setDownloadButtonBlob();
   vcardsDldBtn.removeAttribute(`disabled`);
 }
@@ -122,7 +128,7 @@ async function vcardsGenHandler() {
   const formObjects = getVcardsFormData(appData);
   for (const o of formObjects) {
     const vcard = await window.vcardapi.vcard(o);
-    generateAndStoreQr(o.rowi, vcard);
+    generateAndStoreQr(o.rowi, vcard, getDisplayNameFromFormData(o));
   }
 }
 
@@ -140,7 +146,7 @@ async function getImageFromRow(row: HTMLElement): Promise<IImgFileDesc> {
   const rowi = row.dataset.row;
   const surname = encodeURI((row.children[2].firstChild as HTMLInputElement).value);
   const filename = `${String(rowi).padStart(3, `0`)} - ${surname}.png`;
-  const svg = row.querySelector(`#qr-${rowi}`) as SVGAElement;
+  const svg = row.querySelector(`#qr-${rowi} svg`) as SVGAElement;
   const dataUrl = await svgToPng(svg);
   const data = getBase64String(dataUrl);
   return { filename, data };
@@ -168,7 +174,7 @@ async function applyAppData() {
   const { company, employee_data, company_form_fields } = await window.dataapi.getappdata();
   // set company form data
   company_form_fields.forEach((f) => {
-    setInputValue(`vc-${f}`, company[f]);
+    setInputValue(`vc-${f}`, company[f] || ``);
   }, {});
   // clear employee data form
   Array.from(vcardsTable.querySelectorAll(vcardsEmployeeRowSelector)).forEach(tr => tr.remove());

@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
+import * as path from 'path';
 import { initHandlers } from './handlers';
 import { initMenu } from './menu';
 let mainWindow:BrowserWindow;
@@ -11,9 +11,9 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
-
     });
     mainWindow.loadFile(path.resolve(__dirname, '../html/index.html'));
+    // mainWindow.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {

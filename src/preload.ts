@@ -1,10 +1,10 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { QRCodeOptions } from "qrcode";
-import { IApplicationDataUpdate, IImgFileDesc, IVcardForm } from "./types";
+import { IApplicationDataUpdate, IImgFileDesc, IVcardForm, IQrSvgOptions } from "./types";
 
 contextBridge.exposeInMainWorld('qrapi', {
     qrcode: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcode', data, o),
-    qrcodesvg: (data: string, o?: QRCodeOptions) => ipcRenderer.invoke('qrcodesvg', data, o),
+    qrcodesvg: (data: string, o?: QRCodeOptions, o2?:IQrSvgOptions) => ipcRenderer.invoke('qrcodesvg', data, o, o2),
 });
 contextBridge.exposeInMainWorld('vcardapi', {
     vcard: (formObj: IVcardForm) => ipcRenderer.invoke('vcard', formObj),
@@ -24,8 +24,11 @@ contextBridge.exposeInMainWorld('dataapi', {
     handleMenuAppDataSave: (callback: () => void) => ipcRenderer.on('appDataSave', callback),
     styleremovelogo: () => ipcRenderer.invoke(`styleremovelogo`),
 });
+contextBridge.exposeInMainWorld(`spriteapi`, {
+    listsprites: () => ipcRenderer.invoke(`listsprites`)
+});
 
 contextBridge.exposeInMainWorld('pageapi', {
-    pageChanged: (pageName:string)=>ipcRenderer.invoke(`pageUpdate`, pageName),
+    pageChanged: (pageName: string) => ipcRenderer.invoke(`pageUpdate`, pageName),
     handleGoTo: (callback: (eventPhantom: Event, pageName: string) => void) => ipcRenderer.on('page-go-to', callback),
 });

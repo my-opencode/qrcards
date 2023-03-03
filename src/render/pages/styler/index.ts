@@ -1,14 +1,21 @@
 import { getColorPointers, resetColorForm, saveColorsHandler, saveColorBtnOnHandler } from "./colors.js";
-import { getLogoPointers, uploadDisplayLogoHandler, logoFormApplyData,removeLogoHandler, saveLogoHandler } from "./logo.js";
+import { getLogoPointers, uploadDisplayLogoHandler, logoFormApplyData, removeLogoHandler, saveLogoHandler } from "./logo.js";
+import { getSpritesPointers, buildForm, spritesFormApplyData, saveSpritesHandler } from "./sprites.js";
+import { getTextPointers, resetTextForm, saveTextBtnOnHandler, saveTextHandler } from "./text.js";
 
 export function init(/* window: Window, document: Document */): void {
   window.applyData = async function () {
     resetColorForm();
+    resetTextForm();
     logoFormApplyData();
+    spritesFormApplyData();
   };
-  addPageEventListeners();
   resetColorForm();
+  resetTextForm();
   logoFormApplyData();
+  buildForm();
+  spritesFormApplyData();
+  addPageEventListeners();
 }
 
 export function addPageEventListeners(): void {
@@ -26,6 +33,18 @@ export function addPageEventListeners(): void {
     colorIris.addEventListener(`change`, saveColorBtnOnHandler);
     colorSaveBtn.addEventListener(`click`, saveColorsHandler);
     const {
+      colorText,
+      textDisabled,
+      textFont,
+      textSize,
+      textSaveBtn,
+    } = getTextPointers();
+    colorText.addEventListener(`change`, saveTextBtnOnHandler);
+    textDisabled.addEventListener(`change`, saveTextBtnOnHandler);
+    textFont.addEventListener(`change`, saveTextBtnOnHandler);
+    textSize.addEventListener(`input`, saveTextBtnOnHandler);
+    textSaveBtn.addEventListener(`click`, saveTextHandler);
+    const {
       logoSaveBtn,
       logoFile,
       logoRmvFile
@@ -33,6 +52,8 @@ export function addPageEventListeners(): void {
     logoFile.addEventListener(`click`, uploadDisplayLogoHandler);
     logoRmvFile.addEventListener(`click`, removeLogoHandler);
     logoSaveBtn.addEventListener(`click`, saveLogoHandler);
+    const { spritesSaveBtn } = getSpritesPointers();
+    spritesSaveBtn.addEventListener(`click`, saveSpritesHandler);
   } catch (err) {
     console.log(`Cannot add page listeners: ${err.message}`);
   }

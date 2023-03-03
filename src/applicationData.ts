@@ -1,6 +1,36 @@
 import fs from "fs/promises";
-import { IApplicationData, IApplicationDataUpdate } from "./types";
+import { IApplicationData, IApplicationDataUpdate, IVcardCompanyForm, IVcardEmployeeForm, IVcardForm } from "./types";
 import { dialog } from "electron";
+
+const defaultCompanyFormFields:(keyof IVcardCompanyForm)[] = [
+  `company`,
+  `addressdetails`,
+  `addresslocalitycity`,
+  `addressregion`,
+  `addresszip`,
+  `addresscountry`,
+  `timezone`,
+  `phonework`,
+  `phonemobile`,
+  `websitework`,
+];
+const defaultEmployeeormFields:(keyof IVcardEmployeeForm)[] = [
+  "prefix",
+  "surname",
+  "names",
+  "suffix",
+  "fullname",
+  "title",
+  "bday",
+  "email",
+  "phonework",
+  "phonemobile",
+  "phonemobilepersonal",
+  "cardDisplayName",
+];
+const defaultRequiredFields : (keyof IVcardForm)[] =[
+  `surname`, `names`, `fullname`
+];
 
 export const applicationData: IApplicationData = {
   style: {},
@@ -28,35 +58,11 @@ export const applicationData: IApplicationData = {
     suffix: ``,
     fullname: ``,
     title: ``,
+    cardDisplayName: ``,
   }],
-  company_form_fields: [
-    `company`,
-    `addressdetails`,
-    `addresslocalitycity`,
-    `addressregion`,
-    `addresszip`,
-    `addresscountry`,
-    `timezone`,
-    `phonework`,
-    `phonemobile`,
-    `websitework`,
-  ],
-  employee_form_fields: [
-    "prefix",
-    "surname",
-    "names",
-    "suffix",
-    "fullname",
-    "title",
-    "bday",
-    "email",
-    "phonework",
-    "phonemobile",
-    "phonemobilepersonal"
-  ],
-  vcard_required_fields: [
-    `surname`, `names`, `fullname`
-  ]
+  company_form_fields: defaultCompanyFormFields.slice(),
+  employee_form_fields:defaultEmployeeormFields.slice(),
+  vcard_required_fields: defaultRequiredFields.slice()
 };
 
 export async function appDataLoad(): Promise<void> {
@@ -80,9 +86,9 @@ export async function appDataLoad(): Promise<void> {
   if (data.style) applicationData.style = data.style;
   if (data.company) applicationData.company = data.company;
   if (data.employee_data) applicationData.employee_data = data.employee_data;
-  if (data.company_form_fields) applicationData.company_form_fields = data.company_form_fields;
-  if (data.employee_form_fields) applicationData.employee_form_fields = data.employee_form_fields;
-  if (data.vcard_required_fields) applicationData.vcard_required_fields = data.vcard_required_fields;
+  // if (data.company_form_fields) applicationData.company_form_fields = data.company_form_fields;
+  // if (data.employee_form_fields) applicationData.employee_form_fields = data.employee_form_fields;
+  // if (data.vcard_required_fields) applicationData.vcard_required_fields = data.vcard_required_fields;
   console.log(`data loaded`);
 }
 

@@ -1,6 +1,7 @@
 import { DownloadQr, GenerateAndDisplayQr } from "../_shared/singleQr.js";
 import { getInputValue } from "../_shared/inputs.js";
-interface baseObj { [key: string]: string }
+import { getDisplayNameFromFormData } from "../_shared/vcard.js";
+interface baseObj { [key: string]: string|undefined }
 interface IVcardForm extends baseObj {
   timezone?: string;
   bday?: string;
@@ -25,11 +26,11 @@ interface IVcardForm extends baseObj {
 export interface IDocPointers {
   qrdata: HTMLInputElement,
   qrdisplaycontainer: SVGAElement,
-  qrdisplay: Element,
-  qrdldbtn: Element,
-  qrgenbtn: Element,
+  // qrdisplay: Element,
+  qrdldbtn:  HTMLInputElement,
+  qrgenbtn:  HTMLInputElement,
   qrlink: HTMLAnchorElement,
-  vcardqrgenbtn: Element,
+  vcardqrgenbtn: HTMLInputElement,
   ziplink: HTMLAnchorElement
 }
 
@@ -42,17 +43,17 @@ export function init(/* window: Window, document: Document */): void {
 
 export function getPointers(/* document: Document */): IDocPointers {
   const qrdisplaycontainer = document.querySelector(`#contents #qrdisplaycontainer`) as unknown as SVGAElement;
-  const qrgenbtn = document.querySelector('#contents #qrgenbtn');
-  const vcardqrgenbtn = document.querySelector('#contents #vcardqrgenbtn');
-  const qrdldbtn = document.querySelector('#contents #qrdldbtn');
+  const qrgenbtn = document.querySelector('#contents #qrgenbtn') as HTMLInputElement;
+  const vcardqrgenbtn = document.querySelector('#contents #vcardqrgenbtn') as HTMLInputElement;
+  const qrdldbtn = document.querySelector('#contents #qrdldbtn') as HTMLInputElement;
   const qrlink = document.querySelector('#contents #qrdldlink') as HTMLAnchorElement;
-  const qrdisplay = document.querySelector(`#contents #qrdisplay`);
+  // const qrdisplay = document.querySelector(`#contents #qrdisplay`);
   const qrdata = document.querySelector(`#contents #qrdata`) as HTMLInputElement;
   const ziplink = document.querySelector('#contents #zipdldlink') as HTMLAnchorElement;
   return {
     qrdata,
     qrdisplaycontainer,
-    qrdisplay,
+    // qrdisplay,
     qrdldbtn,
     qrgenbtn,
     qrlink,
@@ -109,11 +110,13 @@ function getVcardFormData(): IVcardForm {
     addresszip: getVcInputValue(`addresszip`),
     addresscountry: getVcInputValue(`addresscountry`),
     title: getVcInputValue(`title`)
-
   };
 }
 
 async function vcardGenHandler() {
+  const formData = getVcardFormData();
   const vcard = await window.vcardapi.vcard(getVcardFormData());
-  GenerateAndDisplayQr(getPointers())(undefined, vcard);
+  const displayName = getDisplayNameFromFormData(formData);
+  console.log(`requesting qrcard gen with display name "${displayName}"`);
+  GenerateAndDisplayQr(getPointers())(undefined, vcard, undefined, {displayName});
 }
